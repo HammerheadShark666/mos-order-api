@@ -1,0 +1,24 @@
+syntax = "proto3";
+ 
+option csharp_namespace = "Microservice.Order.Api.Protos";
+
+package CustomerAddress; 
+
+service CustomerAddressGrpc {
+    rpc GetCustomerAddress (CustomerAddressRequest) returns (CustomerAddressResponse);
+}
+
+message CustomerAddressRequest {
+    string customerId = 1;
+    string addressId = 2;
+}
+ 
+message CustomerAddressResponse {   
+    string addressLine1 = 1;    
+    string addressLine2 = 2;
+    string addressLine3 = 3;
+    string townCity = 4;
+    string county = 5;
+    string postcode = 6; 
+    string country = 7;
+}

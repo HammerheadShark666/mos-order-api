@@ -1,0 +1,28 @@
+version: '3.4'
+
+services:
+  microservice.order.api:
+    container_name: microservice.order.api
+    image: ${DOCKER_REGISTRY-}microserviceorderapi
+    build:
+      context: .
+      dockerfile: Microservice.Order.Api/Dockerfile
+    ports: 
+      - "23000:8080"
+      - "23001:8081"
+    environment: 
+        ASPNETCORE_ENVIRONMENT: Development
+        ASPNETCORE_URLS: https://+:8081;http://+:8080
+        ASPNETCORE_HTTPS_PORT: 8081   
+        JWT_ISSUER: ${JWT_ISSUER}
+        JWT_AUDIENCE: ${JWT_AUDIENCE}
+        JWT_SYMMETRIC_SECURITY_KEY: ${JWT_SYMMETRIC_SECURITY_KEY} 
+        GRPC_BOOK_URL: ${GRPC_BOOK_URL}
+        GRPC_CUSTOMER_ADDRESS_URL: ${GRPC_CUSTOMER_ADDRESS_URL}
+        AZURE_SERVICE_BUS_CONNECTION: ${AZURE_SERVICE_BUS_CONNECTION}
+    networks:
+      - ms-order-system  
+  
+networks:
+  ms-order-system: 
+    external: true
