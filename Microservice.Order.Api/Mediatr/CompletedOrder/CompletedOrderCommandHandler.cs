@@ -1,15 +1,12 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microservice.Order.Api.Data.Repository.Interfaces;
-using Microservice.Order.Api.Domain;
 using Microservice.Order.Api.Grpc.Interfaces;
 using Microservice.Order.Api.Helpers;
 using Microservice.Order.Api.Helpers.Exceptions;
 using Microservice.Order.Api.Helpers.Interfaces;
-using Microservice.Order.Api.Mediatr.CompletedOrder;
 using Microservice.Order.Api.Mediatr.CompletedOrder.Model;
 using Microservice.Order.Api.MediatR.CompletedOrder;
-using System.Diagnostics.Metrics;
 using System.Text.Json;
 
 namespace Microservice.Order.Api.MediatR.AddOrder;

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Microservice.Order.Api.Migrations
 {
     [DbContext(typeof(OrderDbContext))]
-    [Migration("20240524152650_add-address-surname-forename")]
-    partial class addaddresssurnameforename
+    [Migration("20240727132537_create-table-default-data")]
+    partial class createtabledefaultdata
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -76,12 +76,12 @@ namespace Microservice.Order.Api.Migrations
                         new
                         {
                             Id = new Guid("d3ca8ea8-97d6-41ce-937f-e2d9a905d61e"),
-                            AddressForename = "John",
-                            AddressSurname = "West",
-                            Created = new DateTime(2024, 5, 24, 16, 26, 48, 473, DateTimeKind.Local).AddTicks(2619),
-                            CustomerAddressId = new Guid("9a11e147-f416-4063-a5ed-94bae3bce423"),
-                            CustomerId = new Guid("bb472ce8-edfd-4b90-8f11-40f3eeed778b"),
-                            LastUpdated = new DateTime(2024, 5, 24, 16, 26, 48, 473, DateTimeKind.Local).AddTicks(2665),
+                            AddressForename = "Intergration_Test",
+                            AddressSurname = "Intergration_Test",
+                            Created = new DateTime(2024, 7, 27, 14, 25, 35, 752, DateTimeKind.Local).AddTicks(724),
+                            CustomerAddressId = new Guid("724cbd34-3dff-4e2a-a413-48825f1ab3b9"),
+                            CustomerId = new Guid("6c84d0a3-0c0c-435f-9ae0-4de09247ee15"),
+                            LastUpdated = new DateTime(2024, 7, 27, 14, 25, 35, 752, DateTimeKind.Local).AddTicks(767),
                             OrderNumber = 1,
                             OrderStatusId = 1,
                             Total = 25.99m
@@ -89,12 +89,12 @@ namespace Microservice.Order.Api.Migrations
                         new
                         {
                             Id = new Guid("7b5673fa-166e-417e-a0bf-d2c7d72b6ab3"),
-                            AddressForename = "Kelly",
-                            AddressSurname = "Johnson",
-                            Created = new DateTime(2024, 5, 24, 16, 26, 48, 473, DateTimeKind.Local).AddTicks(2677),
-                            CustomerAddressId = new Guid("eeed04b3-538b-4677-887b-77f0803958a6"),
+                            AddressForename = "Intergration_Test",
+                            AddressSurname = "Intergration_Test",
+                            Created = new DateTime(2024, 7, 27, 14, 25, 35, 752, DateTimeKind.Local).AddTicks(776),
+                            CustomerAddressId = new Guid("724cbd34-3dff-4e2a-a413-48825f1ab3b9"),
                             CustomerId = new Guid("6c84d0a3-0c0c-435f-9ae0-4de09247ee15"),
-                            LastUpdated = new DateTime(2024, 5, 24, 16, 26, 48, 473, DateTimeKind.Local).AddTicks(2679),
+                            LastUpdated = new DateTime(2024, 7, 27, 14, 25, 35, 752, DateTimeKind.Local).AddTicks(778),
                             OrderNumber = 2,
                             OrderStatusId = 2,
                             Total = 19.98m
@@ -102,12 +102,12 @@ namespace Microservice.Order.Api.Migrations
                         new
                         {
                             Id = new Guid("6f3e950c-5502-491f-911d-02e112318705"),
-                            AddressForename = "Michael",
-                            AddressSurname = "Willow",
-                            Created = new DateTime(2024, 5, 24, 16, 26, 48, 473, DateTimeKind.Local).AddTicks(2684),
-                            CustomerAddressId = new Guid("2bc333d2-8f8c-46bd-b454-b0735b662bea"),
-                            CustomerId = new Guid("82c5ba18-d049-49a0-83aa-a2a9840b08ad"),
-                            LastUpdated = new DateTime(2024, 5, 24, 16, 26, 48, 473, DateTimeKind.Local).AddTicks(2686),
+                            AddressForename = "Intergration_Test",
+                            AddressSurname = "Intergration_Test",
+                            Created = new DateTime(2024, 7, 27, 14, 25, 35, 752, DateTimeKind.Local).AddTicks(782),
+                            CustomerAddressId = new Guid("724cbd34-3dff-4e2a-a413-48825f1ab3b9"),
+                            CustomerId = new Guid("6c84d0a3-0c0c-435f-9ae0-4de09247ee15"),
+                            LastUpdated = new DateTime(2024, 7, 27, 14, 25, 35, 752, DateTimeKind.Local).AddTicks(784),
                             OrderNumber = 3,
                             OrderStatusId = 3,
                             Total = 2.50m
@@ -115,12 +115,12 @@ namespace Microservice.Order.Api.Migrations
                         new
                         {
                             Id = new Guid("e7cc2320-6443-46bd-93f4-a2ae7b437287"),
-                            AddressForename = "Lillie",
-                            AddressSurname = "Harper",
-                            Created = new DateTime(2024, 5, 24, 16, 26, 48, 473, DateTimeKind.Local).AddTicks(2690),
-                            CustomerAddressId = new Guid("9a11e147-f416-4063-a5ed-94bae3bce423"),
-                            CustomerId = new Guid("bb472ce8-edfd-4b90-8f11-40f3eeed778b"),
-                            LastUpdated = new DateTime(2024, 5, 24, 16, 26, 48, 473, DateTimeKind.Local).AddTicks(2691),
+                            AddressForename = "Intergration_Test2",
+                            AddressSurname = "Intergration_Test2",
+                            Created = new DateTime(2024, 7, 27, 14, 25, 35, 752, DateTimeKind.Local).AddTicks(789),
+                            CustomerAddressId = new Guid("b88ef4ce-739f-4c1b-b6d6-9d0727515de8"),
+                            CustomerId = new Guid("929eaf82-e4fd-4efe-9cae-ce4d7e32d159"),
+                            LastUpdated = new DateTime(2024, 7, 27, 14, 25, 35, 752, DateTimeKind.Local).AddTicks(790),
                             OrderNumber = 4,
                             OrderStatusId = 4,
                             Total = 51.47m
@@ -128,80 +128,15 @@ namespace Microservice.Order.Api.Migrations
                         new
                         {
                             Id = new Guid("30cfccfe-038c-4f20-a306-f0a2a9df0829"),
-                            AddressForename = "Burt",
-                            AddressSurname = "Mortenson",
-                            Created = new DateTime(2024, 5, 24, 16, 26, 48, 473, DateTimeKind.Local).AddTicks(2697),
-                            CustomerAddressId = new Guid("97d31501-4008-4b1a-9aeb-71d4cea31059"),
-                            CustomerId = new Guid("39c2080b-18ca-4974-8937-f9d758b89bac"),
-                            LastUpdated = new DateTime(2024, 5, 24, 16, 26, 48, 473, DateTimeKind.Local).AddTicks(2698),
+                            AddressForename = "Intergration_Test2",
+                            AddressSurname = "Intergration_Test2",
+                            Created = new DateTime(2024, 7, 27, 14, 25, 35, 752, DateTimeKind.Local).AddTicks(795),
+                            CustomerAddressId = new Guid("b88ef4ce-739f-4c1b-b6d6-9d0727515de8"),
+                            CustomerId = new Guid("929eaf82-e4fd-4efe-9cae-ce4d7e32d159"),
+                            LastUpdated = new DateTime(2024, 7, 27, 14, 25, 35, 752, DateTimeKind.Local).AddTicks(797),
                             OrderNumber = 5,
                             OrderStatusId = 1,
                             Total = 24.98m
-                        },
-                        new
-                        {
-                            Id = new Guid("34335ca4-ebcd-4a2e-b54a-af9feb09535d"),
-                            AddressForename = "Grace",
-                            AddressSurname = "Keltso",
-                            Created = new DateTime(2024, 5, 24, 16, 26, 48, 473, DateTimeKind.Local).AddTicks(2704),
-                            CustomerAddressId = new Guid("14e016ec-3935-431f-88a3-17b55ad99198"),
-                            CustomerId = new Guid("453b920e-e8b0-4c5e-bd44-77c4cd75771d"),
-                            LastUpdated = new DateTime(2024, 5, 24, 16, 26, 48, 473, DateTimeKind.Local).AddTicks(2705),
-                            OrderNumber = 6,
-                            OrderStatusId = 2,
-                            Total = 19.98m
-                        },
-                        new
-                        {
-                            Id = new Guid("54d54c4e-d774-4b01-af87-0d0b94510767"),
-                            AddressForename = "Rachel",
-                            AddressSurname = "Arbring",
-                            Created = new DateTime(2024, 5, 24, 16, 26, 48, 473, DateTimeKind.Local).AddTicks(2711),
-                            CustomerAddressId = new Guid("870062c2-09c1-4fd4-8066-7d149b5cc86c"),
-                            CustomerId = new Guid("4de2c877-5cdb-4153-9e49-4a8f77d910e9"),
-                            LastUpdated = new DateTime(2024, 5, 24, 16, 26, 48, 473, DateTimeKind.Local).AddTicks(2712),
-                            OrderNumber = 7,
-                            OrderStatusId = 5,
-                            Total = 28.78m
-                        },
-                        new
-                        {
-                            Id = new Guid("07a2ab81-7651-484f-945e-08074e7662bc"),
-                            AddressForename = "Ellen",
-                            AddressSurname = "Frown",
-                            Created = new DateTime(2024, 5, 24, 16, 26, 48, 473, DateTimeKind.Local).AddTicks(2717),
-                            CustomerAddressId = new Guid("0a1cbffa-967f-4338-a2c1-e80238d61a16"),
-                            CustomerId = new Guid("160429ab-7d0b-464e-8042-cec3218c014c"),
-                            LastUpdated = new DateTime(2024, 5, 24, 16, 26, 48, 473, DateTimeKind.Local).AddTicks(2719),
-                            OrderNumber = 8,
-                            OrderStatusId = 5,
-                            Total = 12.99m
-                        },
-                        new
-                        {
-                            Id = new Guid("9e93a116-a143-4865-8a84-b000d0df09c7"),
-                            AddressForename = "William",
-                            AddressSurname = "Gordonson",
-                            Created = new DateTime(2024, 5, 24, 16, 26, 48, 473, DateTimeKind.Local).AddTicks(2724),
-                            CustomerAddressId = new Guid("25ed9fe9-4c1d-414e-b6b3-bcf725dce00b"),
-                            CustomerId = new Guid("3ea4739c-a8dc-4c59-b3ba-c6104024c24e"),
-                            LastUpdated = new DateTime(2024, 5, 24, 16, 26, 48, 473, DateTimeKind.Local).AddTicks(2725),
-                            OrderNumber = 9,
-                            OrderStatusId = 5,
-                            Total = 59.96m
-                        },
-                        new
-                        {
-                            Id = new Guid("69e3878e-8293-4e81-8791-31328e2a3907"),
-                            AddressForename = "Sano",
-                            AddressSurname = "Yot",
-                            Created = new DateTime(2024, 5, 24, 16, 26, 48, 473, DateTimeKind.Local).AddTicks(2730),
-                            CustomerAddressId = new Guid("2bc333d2-8f8c-46bd-b454-b0735b662bea"),
-                            CustomerId = new Guid("82c5ba18-d049-49a0-83aa-a2a9840b08ad"),
-                            LastUpdated = new DateTime(2024, 5, 24, 16, 26, 48, 473, DateTimeKind.Local).AddTicks(2732),
-                            OrderNumber = 10,
-                            OrderStatusId = 5,
-                            Total = 10.00m
                         });
                 });
 
@@ -313,69 +248,6 @@ namespace Microservice.Order.Api.Migrations
                             ProductTypeId = 1,
                             Quantity = 2,
                             UnitPrice = 7.50m
-                        },
-                        new
-                        {
-                            OrderId = new Guid("34335ca4-ebcd-4a2e-b54a-af9feb09535d"),
-                            ProductId = new Guid("37544155-da95-49e8-b7fe-3c937eb1de98"),
-                            Name = "Wild Love",
-                            ProductTypeId = 1,
-                            Quantity = 2,
-                            UnitPrice = 9.99m
-                        },
-                        new
-                        {
-                            OrderId = new Guid("54d54c4e-d774-4b01-af87-0d0b94510767"),
-                            ProductId = new Guid("6b85f863-7991-4f93-bf86-8c756fdeac87"),
-                            Name = "Fall of Civilizations: Stories of Greatness and Decline",
-                            ProductTypeId = 1,
-                            Quantity = 2,
-                            UnitPrice = 14.39m
-                        },
-                        new
-                        {
-                            OrderId = new Guid("07a2ab81-7651-484f-945e-08074e7662bc"),
-                            ProductId = new Guid("285c81bc-f257-4ffb-b6ce-7ab5fa9e5c81"),
-                            Name = "Skandar and the Chaos Trials",
-                            ProductTypeId = 1,
-                            Quantity = 1,
-                            UnitPrice = 12.99m
-                        },
-                        new
-                        {
-                            OrderId = new Guid("9e93a116-a143-4865-8a84-b000d0df09c7"),
-                            ProductId = new Guid("01f54aa7-c51a-4b92-a72b-68e0965bf246"),
-                            Name = "Funny Story",
-                            ProductTypeId = 1,
-                            Quantity = 1,
-                            UnitPrice = 11.99m
-                        },
-                        new
-                        {
-                            OrderId = new Guid("9e93a116-a143-4865-8a84-b000d0df09c7"),
-                            ProductId = new Guid("ecf65c56-5670-473b-9f20-fb0b191c2f0f"),
-                            Name = "Saltblood",
-                            ProductTypeId = 1,
-                            Quantity = 3,
-                            UnitPrice = 15.99m
-                        },
-                        new
-                        {
-                            OrderId = new Guid("69e3878e-8293-4e81-8791-31328e2a3907"),
-                            ProductId = new Guid("07c06c3f-0897-44b6-ae05-a70540e73a12"),
-                            Name = "Infinity Son",
-                            ProductTypeId = 1,
-                            Quantity = 1,
-                            UnitPrice = 7.50m
-                        },
-                        new
-                        {
-                            OrderId = new Guid("69e3878e-8293-4e81-8791-31328e2a3907"),
-                            ProductId = new Guid("f3fcab1f-1c11-47f5-9e11-7868a88408e6"),
-                            Name = "Thunderhead",
-                            ProductTypeId = 1,
-                            Quantity = 1,
-                            UnitPrice = 2.50m
                         });
                 });
 
