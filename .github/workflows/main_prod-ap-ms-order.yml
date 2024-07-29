@@ -31,7 +31,7 @@ jobs:
       with:
         push: true
         tags: prodcrmsordersystem.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_3cf82af2fffe4d75a978df5e61fdb518 }}/microserviceorder:${{ github.sha }}
-        file: ./Dockerfile
+        file: ./Microservice.Order.Api/Dockerfile
 
   deploy:
     runs-on: ubuntu-latest
