@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A29ED2E4-0D6D-415C-94E5-A6F144F32CC0}"
 	ProjectSection(SolutionItems) = preProject
 		.env = .env
+		PostmanCollections\MOS_Order_Api_V1_postman_collection.json = PostmanCollections\MOS_Order_Api_V1_postman_collection.json
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microservice.Order.Api", "Microservice.Order.Api\Microservice.Order.Api.csproj", "{2EDA76D7-E069-476F-AD69-0F8E47743315}"
