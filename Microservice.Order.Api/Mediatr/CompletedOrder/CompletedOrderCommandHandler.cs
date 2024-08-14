@@ -65,7 +65,7 @@ public class CompletedOrderCommandHandler(IOrderRepository orderRepository,
         var orderHistory = _mapper.Map<OrderHistory>(order); 
 
         await GetOrderAddress(orderHistory, order);
-        await _azureServiceBusHelper.SendMessage(Constants.AzureServiceBusQueueOrderCompleted, GetSerializedOrder(orderHistory));
+        await _azureServiceBusHelper.SendMessage(EnvironmentVariables.AzureServiceBusQueueOrderCompleted, GetSerializedOrder(orderHistory));
     }
 
     private async Task GetOrderAddress(OrderHistory orderHistory, Domain.Order order)
