@@ -8,10 +8,10 @@
   },
   "item": [
     {
-      "name": "Authorization",
+      "name": "Authentication",
       "item": [
         {
-          "name": "{{authorization_url}}/api/{version}login",
+          "name": "{{authentication_url}}/api/{version}login",
           "event": [
             {
               "listen": "test",
@@ -46,10 +46,10 @@
               }
             },
             "url": {
-              "raw": "https://{{authorization_url}}/api/v1/login",
+              "raw": "https://{{authentication_url}}/api/v1/login",
               "protocol": "https",
               "host": [
-                "{{authorization_url}}"
+                "{{authentication_url}}"
               ],
               "path": [
                 "api",
@@ -80,8 +80,14 @@
                   "    pm.response.to.have.jsonSchema (JSON.parse(pm.environment.get(\"order_added_schema\")));\r",
                   "}); \r",
                   "\r",
-                  "var jsonData = JSON.parse(pm.response.text());  \r",
-                  "pm.environment.set(\"order_id\", jsonData.order.id);\r",
+                  "var jsonData = JSON.parse(pm.response.text()); \r",
+                  "\r",
+                  "if(jsonData.order == undefined)\r",
+                  "{\r",
+                  "    console.log = \"Error adding order.\"\r",
+                  "}\r",
+                  "else\r",
+                  "    pm.environment.set(\"order_id\", jsonData.order.id);\r",
                   ""
                 ],
                 "type": "text/javascript",
