@@ -9,4 +9,5 @@ public class EnvironmentVariables
     public static string GRPC_CustomerAddress_Url = Environment.GetEnvironmentVariable(Constants.GRPC_CustomerAddress_Url);
 
     public static string AzureServiceBusConnection => Environment.GetEnvironmentVariable(Constants.AzureServiceBusConnection);
+    public static string AzureServiceBusQueueOrderCompleted => Environment.GetEnvironmentVariable(Constants.AzureServiceBusQueueOrderCompleted);
 }
