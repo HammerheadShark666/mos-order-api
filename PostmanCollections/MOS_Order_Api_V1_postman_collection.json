@@ -51,8 +51,7 @@
               "host": [
                 "{{authentication_url}}"
               ],
-              "path": [
-                "api",
+              "path": [                
                 "v1",
                 "login"
               ]
@@ -128,8 +127,7 @@
               "host": [
                 "{{order_url}}"
               ],
-              "path": [
-                "api",
+              "path": [                
                 "v1",
                 "order",
                 "add"
@@ -177,8 +175,7 @@
               "host": [
                 "{{order_url}}"
               ],
-              "path": [
-                "api",
+              "path": [                
                 "v1",
                 "order",
                 "{{order_id}}"
@@ -230,8 +227,7 @@
               "host": [
                 "{{order_url}}"
               ],
-              "path": [
-                "api",
+              "path": [                
                 "v1",
                 "order",
                 "completed"
