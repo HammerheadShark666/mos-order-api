@@ -129,7 +129,7 @@
               ],
               "path": [                
                 "v1",
-                "order",
+                "orders",
                 "add"
               ]
             }
@@ -177,7 +177,7 @@
               ],
               "path": [                
                 "v1",
-                "order",
+                "orders",
                 "{{order_id}}"
               ]
             }
@@ -229,7 +229,7 @@
               ],
               "path": [                
                 "v1",
-                "order",
+                "orders",
                 "completed"
               ]
             }
