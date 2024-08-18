@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Grpc.Core;
 using Microservice.Order.Api.Helpers.Exceptions;
+using Microsoft.AspNetCore.Http;
 using System.Text.Json;
 
 namespace Microservice.Order.Api.Middleware;
@@ -31,6 +32,8 @@ internal sealed class ExceptionHandlingMiddleware : IMiddleware
 
     private static async Task HandleRpcExceptionAsync(HttpContext httpContext, RpcException exception)
     {
+        httpContext.Response.StatusCode = (int)exception.Status.StatusCode;
+
         var response = new
         {
             status = exception.Status.StatusCode.ToString(),
