@@ -15,20 +15,20 @@ public class Order
 
     [Required]
     [StringLength(50)]
-    public string AddressSurname { get; set; }
+    public string AddressSurname { get; set; } = string.Empty;
 
     [Required]
     [StringLength(50)]
-    public string AddressForename { get; set; }
+    public string AddressForename { get; set; } = string.Empty;
 
     public int OrderNumber { get; set; }
 
-    public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+    public List<OrderItem> OrderItems { get; set; } = [];
 
     public Helpers.Enums.OrderStatus OrderStatusId { get; set; }
 
     [ForeignKey(nameof(OrderStatusId))]
-    public OrderStatus OrderStatus { get; set; }
+    public OrderStatus OrderStatus { get; set; } = default!;
 
     [Required]
     [Column(TypeName = "decimal(19, 2)")]

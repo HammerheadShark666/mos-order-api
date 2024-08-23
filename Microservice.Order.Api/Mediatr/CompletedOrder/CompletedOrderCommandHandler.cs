@@ -37,7 +37,7 @@ public class CompletedOrderCommandHandler(IOrderRepository orderRepository,
         var order = await _orderRepository.GetByIdAsync(orderId, GetCustomerId());
         if (order == null)
         {
-            _logger.LogError($"Order not found for order - {orderId}");
+            _logger.LogError("{message}", "Order not found for order - {orderId}");
             throw new NotFoundException("Order not found for order.");
         }
 
@@ -53,14 +53,14 @@ public class CompletedOrderCommandHandler(IOrderRepository orderRepository,
         var customerId = _customerHttpAccessor.CustomerId;
         if (Guid.Empty.Equals(customerId))
         {
-            _logger.LogError($"Customer not found - {customerId}");
+            _logger.LogError("{message}", "Customer not found - {customerId}");
             throw new NotFoundException("Customer not found.");
         }
 
         return customerId;
     }
 
-    private string GetSerializedOrder(OrderHistory orderHistory)
+    private static string GetSerializedOrder(OrderHistory orderHistory)
     {
         return JsonSerializer.Serialize(orderHistory);
     }
@@ -78,7 +78,7 @@ public class CompletedOrderCommandHandler(IOrderRepository orderRepository,
         var customerAddress = await _customerAddressService.GetCustomerAddressAsync(order.CustomerAddressId);
         if (customerAddress == null)
         {
-            _logger.LogError($"Customer address not found for order id - {order.Id}");
+            _logger.LogError("{message}", "Customer address not found for order id - {order.Id}");
             throw new NotFoundException("Customer address not found for order id.");
         }
 

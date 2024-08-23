@@ -1,3 +1,5 @@
+// Ignore Spelling: Mediatr
+
 using FluentValidation;
 using MediatR;
 using Microservice.Order.Api.Data.Repository.Interfaces;
@@ -13,17 +15,17 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using System.Reflection;
 
-namespace Microservice.Order.Api.Test.Unit;
+namespace Microservice.Order.Api.Test.Unit.Mediatr;
 
 [TestFixture]
 public class CompletedOrderMediatrTests
 {
-    private Mock<ICustomerAddressService> customerAddressGrpcService = new();
-    private Mock<IOrderRepository> orderRepositoryMock = new();
-    private Mock<IAzureServiceBusHelper> azureServiceBusHelperMock = new();
-    private Mock<ICustomerHttpAccessor> customerHttpAccessorMock = new();
-    private Mock<ILogger<CompletedOrderCommandHandler>> loggerMock = new();
-    private ServiceCollection services = new();
+    private readonly Mock<ICustomerAddressService> customerAddressGrpcService = new();
+    private readonly Mock<IOrderRepository> orderRepositoryMock = new();
+    private readonly Mock<IAzureServiceBusHelper> azureServiceBusHelperMock = new();
+    private readonly Mock<ICustomerHttpAccessor> customerHttpAccessorMock = new();
+    private readonly Mock<ILogger<CompletedOrderCommandHandler>> loggerMock = new();
+    private readonly ServiceCollection services = new();
     private ServiceProvider serviceProvider;
     private IMediator mediator;
 
@@ -58,19 +60,19 @@ public class CompletedOrderMediatrTests
         Guid customerId = new("29a75938-ce2d-473b-b7fe-2903fe97fd6e");
         Guid customerAddressId = new("724cbd34-3dff-4e2a-a413-48825f1ab3b9");
 
-        var orderItem1 = new Domain.OrderItem
+        var orderItem1 = new Api.Domain.OrderItem
         {
             OrderId = orderId,
             ProductId = new Guid("6131ce7e-fb11-4608-a3d3-f01caee2c465"),
             Name = "Infinity Reaper",
-            ProductType = new Domain.ProductType() { Id = Enums.ProductType.Book, Name = "Book" },
+            ProductType = new Api.Domain.ProductType() { Id = Enums.ProductType.Book, Name = "Book" },
             Quantity = 1,
             UnitPrice = 8.99m
         };
 
         var orderItems = new List<OrderItem>() { orderItem1 };
 
-        var order = new Domain.Order()
+        var order = new Api.Domain.Order()
         {
             Id = orderId,
             CustomerId = customerId,
@@ -168,19 +170,19 @@ public class CompletedOrderMediatrTests
         Guid customerId = new("29a75938-ce2d-473b-b7fe-2903fe97fd6e");
         Guid customerAddressId = new("724cbd34-3dff-4e2a-a413-48825f1ab3b9");
 
-        var orderItem1 = new Domain.OrderItem
+        var orderItem1 = new Api.Domain.OrderItem
         {
             OrderId = orderId,
             ProductId = new Guid("6131ce7e-fb11-4608-a3d3-f01caee2c465"),
             Name = "Infinity Reaper",
-            ProductType = new Domain.ProductType() { Id = Enums.ProductType.Book, Name = "Book" },
+            ProductType = new Api.Domain.ProductType() { Id = Enums.ProductType.Book, Name = "Book" },
             Quantity = 1,
             UnitPrice = 8.99m
         };
 
         var orderItems = new List<OrderItem>() { orderItem1 };
 
-        var order = new Domain.Order()
+        var order = new Api.Domain.Order()
         {
             Id = orderId,
             CustomerId = customerId,
@@ -194,8 +196,7 @@ public class CompletedOrderMediatrTests
         };
 
         customerAddressGrpcService
-                .Setup(x => x.GetCustomerAddressAsync(customerAddressId))
-                .Returns(Task.FromResult((CustomerAddressResponse)null));
+                .Setup(x => x.GetCustomerAddressAsync(customerAddressId));
 
         orderRepositoryMock
                 .Setup(x => x.Exists(orderId))

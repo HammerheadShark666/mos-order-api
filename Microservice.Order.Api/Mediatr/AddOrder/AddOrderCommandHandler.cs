@@ -57,7 +57,7 @@ public class AddOrderCommandHandler(IOrderRepository orderRepository,
         var customerAddress = await _customerAddressService.GetCustomerAddressAsync(customerAddressId);
         if (customerAddress == null)
         {
-            _logger.LogError($"Customer address not found for id - {customerAddressId}");
+            _logger.LogError("{message}", "Customer address not found for id - {customerAddressId}");
             throw new NotFoundException("Customer address not found.");
         }
 
@@ -76,12 +76,14 @@ public class AddOrderCommandHandler(IOrderRepository orderRepository,
 
     public void CalculateOrderTotal(Domain.Order order)
     {
-        order.Total = (decimal)order.OrderItems.Where(c => c.UnitPrice != null).Sum(c => (double)c.UnitPrice * c.Quantity);
+        order.Total = (decimal)order.OrderItems
+                                    .Where(c => c.UnitPrice != null)
+                                    .Sum(c => ((double)c.UnitPrice) * c.Quantity);
     }
 
     private async Task<List<OrderItem>> UpdateOrderItemsAsync(Domain.Order order)
     {
-        List<OrderItem> invalidOrderItems = new();
+        List<OrderItem> invalidOrderItems = []; ;
 
         var groupedOrderItemsByProductType = GroupOrderItemsByProductType(order.OrderItems);
 
@@ -106,7 +108,7 @@ public class AddOrderCommandHandler(IOrderRepository orderRepository,
         return invalidOrderItems;
     }
 
-    private List<List<OrderItem>> GroupOrderItemsByProductType(List<OrderItem> orderItems)
+    private static List<List<OrderItem>> GroupOrderItemsByProductType(List<OrderItem> orderItems)
     {
         var result = orderItems.GroupBy(x => x.ProductTypeId)
                                .Select(grp => grp.ToList())
@@ -114,7 +116,7 @@ public class AddOrderCommandHandler(IOrderRepository orderRepository,
         return result;
     }
 
-    private Enums.ProductType GetProductType(List<OrderItem> orderItems)
+    private static Enums.ProductType GetProductType(List<OrderItem> orderItems)
     {
         var firstOrderItem = orderItems.FirstOrDefault();
         if (firstOrderItem != null)
@@ -132,19 +134,21 @@ public class AddOrderCommandHandler(IOrderRepository orderRepository,
 
         foreach (var bookDetailResponse in bookDetailsResponse.BookResponses)
         {
-            UpdateOrderItem(order, bookDetailResponse, Enums.ProductType.Book);
+            UpdateOrderItem(order, bookDetailResponse);
         }
 
-        return RemoveInvalidOrderItemsFromOrder(bookDetailsResponse.NotFoundBookResponses.ToList(), order, Enums.ProductType.Book);
+        return RemoveInvalidOrderItemsFromOrder([.. bookDetailsResponse.NotFoundBookResponses], order, Enums.ProductType.Book);
     }
 
-    private List<OrderItem> RemoveInvalidOrderItemsFromOrder(List<NotFoundBookResponse> notFoundBooks, Domain.Order order, Enums.ProductType productType)
+    private static List<OrderItem> RemoveInvalidOrderItemsFromOrder(List<NotFoundBookResponse> notFoundBooks, Domain.Order order, Enums.ProductType productType)
     {
-        List<OrderItem> invalidOrderItems = new();
+        List<OrderItem> invalidOrderItems = [];
 
         foreach (var notFoundBook in notFoundBooks)
         {
-            OrderItem invalidOrderItem = order.OrderItems.Where(o => o.ProductId == new Guid(notFoundBook.Id)).SingleOrDefault();
+            OrderItem? invalidOrderItem = order.OrderItems
+                                              .Where(o => o.ProductId == new Guid(notFoundBook.Id))
+                                              .SingleOrDefault();
 
             if (invalidOrderItem != null)
             {
@@ -158,12 +162,12 @@ public class AddOrderCommandHandler(IOrderRepository orderRepository,
         return invalidOrderItems;
     }
 
-    private List<Guid> GetProductIds(List<OrderItem> orderItems)
+    private static List<Guid> GetProductIds(List<OrderItem> orderItems)
     {
         return orderItems.Select(c => c.ProductId).ToList();
     }
 
-    private void UpdateOrderItem(Domain.Order order, BookResponse bookResponse, Enums.ProductType productType)
+    private static void UpdateOrderItem(Domain.Order order, BookResponse bookResponse)
     {
         var orderItem = order.OrderItems.SingleOrDefault(o => o.ProductId.Equals(new Guid(bookResponse.Id)));
         if (orderItem != null)

@@ -14,12 +14,12 @@ public class OrderItem
     public Guid ProductId { get; set; }
 
     [MaxLength(150)]
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     public Helpers.Enums.ProductType ProductTypeId { get; set; }
 
     [ForeignKey(nameof(ProductTypeId))]
-    public ProductType ProductType { get; set; }
+    public ProductType ProductType { get; set; } = default!;
 
     [Required]
     [Range(1, 999, ErrorMessage = "{0} must be between {1:c} and {2:c}")]

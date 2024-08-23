@@ -11,5 +11,5 @@ public class ProductType
 
     [MaxLength(75)]
     [Required]
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 }

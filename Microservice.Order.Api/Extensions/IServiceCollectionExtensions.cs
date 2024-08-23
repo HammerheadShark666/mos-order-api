@@ -1,4 +1,6 @@
-﻿using Asp.Versioning;
+﻿// Ignore Spelling: Mediatr Api Grpc Jwt Versioning
+
+using Asp.Versioning;
 using FluentValidation;
 using Grpc.Core;
 using Grpc.Net.Client.Configuration;
