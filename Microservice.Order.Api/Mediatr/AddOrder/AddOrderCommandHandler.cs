@@ -43,7 +43,7 @@ public class AddOrderCommandHandler(IOrderRepository orderRepository,
 
     private AddOrderOrderResponse GetOrderResponse(Domain.Order order, AddOrderAddressResponse addOrderAddressResponse)
     {
-        var orderItemsResponse = _mapper.Map<List<AddOrderOrderItemResponse>>(order.OrderItems); 
+        var orderItemsResponse = _mapper.Map<List<AddOrderOrderItemResponse>>(order.OrderItems);
 
         return new AddOrderOrderResponse(order.Id, OrderHelper.PaddedOrderNumber(order.OrderNumber),
                                             order.AddressSurname, order.AddressForename, orderItemsResponse,
@@ -58,8 +58,8 @@ public class AddOrderCommandHandler(IOrderRepository orderRepository,
         if (customerAddress == null)
         {
             _logger.LogError($"Customer address not found for id - {customerAddressId}");
-            throw new NotFoundException("Customer address not found for id.");
-        }            
+            throw new NotFoundException("Customer address not found.");
+        }
 
         return _mapper.Map<AddOrderAddressResponse>(customerAddress);
     }
@@ -115,7 +115,7 @@ public class AddOrderCommandHandler(IOrderRepository orderRepository,
     }
 
     private Enums.ProductType GetProductType(List<OrderItem> orderItems)
-    { 
+    {
         var firstOrderItem = orderItems.FirstOrDefault();
         if (firstOrderItem != null)
         {

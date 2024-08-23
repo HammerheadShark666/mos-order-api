@@ -39,7 +39,7 @@ public class CompletedOrderCommandHandler(IOrderRepository orderRepository,
         {
             _logger.LogError($"Order not found for order - {orderId}");
             throw new NotFoundException("Order not found for order.");
-        } 
+        }
 
         order.OrderStatusId = Enums.OrderStatus.Completed;
 
@@ -80,7 +80,7 @@ public class CompletedOrderCommandHandler(IOrderRepository orderRepository,
         {
             _logger.LogError($"Customer address not found for order id - {order.Id}");
             throw new NotFoundException("Customer address not found for order id.");
-        } 
+        }
 
         orderHistory.Address = new OrderHistoryAddress()
         {

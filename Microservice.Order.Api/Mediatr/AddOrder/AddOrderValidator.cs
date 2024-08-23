@@ -12,7 +12,7 @@ public class AddOrderValidator : AbstractValidator<AddOrderRequest>
         _orderRepository = orderRepository;
 
         RuleFor(addOrderRequest => addOrderRequest.OrderItems.Count)
-                .NotEqual(0) 
-                .WithMessage("Order has no order items."); 
+                .NotEqual(0)
+                .WithMessage("Order has no order items.");
     }
 }

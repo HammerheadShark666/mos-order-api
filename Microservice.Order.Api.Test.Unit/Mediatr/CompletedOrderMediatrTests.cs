@@ -5,7 +5,7 @@ using Microservice.Order.Api.Domain;
 using Microservice.Order.Api.Grpc.Interfaces;
 using Microservice.Order.Api.Helpers;
 using Microservice.Order.Api.Helpers.Exceptions;
-using Microservice.Order.Api.Helpers.Interfaces; 
+using Microservice.Order.Api.Helpers.Interfaces;
 using Microservice.Order.Api.MediatR.CompletedOrder;
 using Microservice.Order.Api.Protos;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,7 +18,7 @@ namespace Microservice.Order.Api.Test.Unit;
 [TestFixture]
 public class CompletedOrderMediatrTests
 {
-    private Mock<ICustomerAddressService> customerAddressGrpcService = new(); 
+    private Mock<ICustomerAddressService> customerAddressGrpcService = new();
     private Mock<IOrderRepository> orderRepositoryMock = new();
     private Mock<IAzureServiceBusHelper> azureServiceBusHelperMock = new();
     private Mock<ICustomerHttpAccessor> customerHttpAccessorMock = new();
@@ -34,7 +34,7 @@ public class CompletedOrderMediatrTests
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(CompletedOrderCommandHandler).Assembly));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidatorBehavior<,>));
         services.AddScoped<IOrderRepository>(sp => orderRepositoryMock.Object);
-        services.AddScoped<ICustomerAddressService>(sp => customerAddressGrpcService.Object); 
+        services.AddScoped<ICustomerAddressService>(sp => customerAddressGrpcService.Object);
         services.AddScoped<IAzureServiceBusHelper>(sp => azureServiceBusHelperMock.Object);
         services.AddScoped<ICustomerHttpAccessor>(sp => customerHttpAccessorMock.Object);
         services.AddScoped<ILogger<CompletedOrderCommandHandler>>(sp => loggerMock.Object);
@@ -56,7 +56,7 @@ public class CompletedOrderMediatrTests
     {
         Guid orderId = new("07c06c3f-0897-44b6-ae05-a70540e73a12");
         Guid customerId = new("29a75938-ce2d-473b-b7fe-2903fe97fd6e");
-        Guid customerAddressId = new Guid("724cbd34-3dff-4e2a-a413-48825f1ab3b9");
+        Guid customerAddressId = new("724cbd34-3dff-4e2a-a413-48825f1ab3b9");
 
         var orderItem1 = new Domain.OrderItem
         {
@@ -79,7 +79,7 @@ public class CompletedOrderMediatrTests
             AddressSurname = "",
             OrderNumber = 1,
             OrderItems = orderItems,
-            Total = 8.99m, 
+            Total = 8.99m,
             OrderStatusId = Enums.OrderStatus.Dispatched
         };
 
@@ -93,10 +93,10 @@ public class CompletedOrderMediatrTests
             Postcode = "Postcode",
             Country = "Country"
         };
-         
+
         customerAddressGrpcService
                 .Setup(x => x.GetCustomerAddressAsync(customerAddressId))
-                .Returns(Task.FromResult(customerAddress)); 
+                .Returns(Task.FromResult(customerAddress));
 
         orderRepositoryMock
                 .Setup(x => x.Exists(orderId))
@@ -104,7 +104,7 @@ public class CompletedOrderMediatrTests
 
         orderRepositoryMock
                 .Setup(x => x.OrderIsClosedAsync(orderId))
-                .Returns(Task.FromResult(false)); 
+                .Returns(Task.FromResult(false));
 
         orderRepositoryMock
                 .Setup(x => x.GetByIdAsync(orderId, customerId))
@@ -114,13 +114,13 @@ public class CompletedOrderMediatrTests
                 .Setup(x => x.UpdateAsync(order));
 
         customerHttpAccessorMock.Setup(x => x.CustomerId)
-                                .Returns(customerId); 
+                                .Returns(customerId);
 
         azureServiceBusHelperMock.Setup(x => x.SendMessage(EnvironmentVariables.AzureServiceBusQueueOrderCompleted, It.IsNotNull<string>()));
 
         var completedOrderRequest = new CompletedOrderRequest(orderId);
         var actualResult = await mediator.Send(completedOrderRequest);
-         
+
         Assert.That(actualResult.message, Is.EqualTo("Order completed."));
     }
 
@@ -129,7 +129,7 @@ public class CompletedOrderMediatrTests
     //{
     //    Guid orderId = new("07c06c3f-0897-44b6-ae05-a70540e73a12");
     //    Guid customerId = new("29a75938-ce2d-473b-b7fe-2903fe97fd6e");
-        
+
     //    var completedOrderRequest = new CompletedOrderRequest(orderId);
     //    var validationException = Assert.ThrowsAsync<NotFoundException>(async () =>
     //    {
@@ -166,7 +166,7 @@ public class CompletedOrderMediatrTests
     {
         Guid orderId = new("07c06c3f-0897-44b6-ae05-a70540e73a12");
         Guid customerId = new("29a75938-ce2d-473b-b7fe-2903fe97fd6e");
-        Guid customerAddressId = new Guid("724cbd34-3dff-4e2a-a413-48825f1ab3b9");
+        Guid customerAddressId = new("724cbd34-3dff-4e2a-a413-48825f1ab3b9");
 
         var orderItem1 = new Domain.OrderItem
         {
@@ -192,7 +192,7 @@ public class CompletedOrderMediatrTests
             Total = 8.99m,
             OrderStatusId = Enums.OrderStatus.Dispatched
         };
-         
+
         customerAddressGrpcService
                 .Setup(x => x.GetCustomerAddressAsync(customerAddressId))
                 .Returns(Task.FromResult((CustomerAddressResponse)null));
@@ -207,14 +207,14 @@ public class CompletedOrderMediatrTests
 
         orderRepositoryMock
                 .Setup(x => x.GetByIdAsync(orderId, customerId))
-                .Returns(Task.FromResult(order)); 
+                .Returns(Task.FromResult(order));
 
         customerHttpAccessorMock.Setup(x => x.CustomerId)
                                 .Returns(customerId);
 
         azureServiceBusHelperMock.Setup(x => x.SendMessage(EnvironmentVariables.AzureServiceBusQueueOrderCompleted, It.IsNotNull<string>()));
 
-        var completedOrderRequest = new CompletedOrderRequest(orderId);         
+        var completedOrderRequest = new CompletedOrderRequest(orderId);
         var validationException = Assert.ThrowsAsync<NotFoundException>(async () =>
         {
             await mediator.Send(completedOrderRequest);

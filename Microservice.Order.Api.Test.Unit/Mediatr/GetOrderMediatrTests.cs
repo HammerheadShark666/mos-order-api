@@ -4,7 +4,6 @@ using Microservice.Order.Api.Domain;
 using Microservice.Order.Api.Grpc.Interfaces;
 using Microservice.Order.Api.Helpers;
 using Microservice.Order.Api.Helpers.Exceptions;
-using Microservice.Order.Api.MediatR.CompletedOrder;
 using Microservice.Order.Api.MediatR.GetOrder;
 using Microservice.Order.Api.Protos;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,7 +16,7 @@ namespace Microservice.Order.Api.Test.Unit;
 [TestFixture]
 public class GetOrderMediatrTests
 {
-    private Mock<ICustomerAddressService> customerAddressGrpcService = new(); 
+    private Mock<ICustomerAddressService> customerAddressGrpcService = new();
     private Mock<IOrderRepository> orderRepositoryMock = new();
     private Mock<ILogger<GetOrderQueryHandler>> loggerMock = new();
     private ServiceCollection services = new();
@@ -44,13 +43,13 @@ public class GetOrderMediatrTests
         services.Clear();
         serviceProvider.Dispose();
     }
-     
+
     [Test]
     public async Task Get_order_successfully_return_order()
     {
         Guid orderId = new("07c06c3f-0897-44b6-ae05-a70540e73a12");
         Guid customerId = new("29a75938-ce2d-473b-b7fe-2903fe97fd6e");
-        Guid customerAddressId = new Guid("724cbd34-3dff-4e2a-a413-48825f1ab3b9");
+        Guid customerAddressId = new("724cbd34-3dff-4e2a-a413-48825f1ab3b9");
 
         var orderItem1 = new Domain.OrderItem
         {
@@ -118,11 +117,11 @@ public class GetOrderMediatrTests
     public void Get_order_not_found_return_exception()
     {
         Guid orderId = new("07c06c3f-0897-44b6-ae05-a70540e73a12");
-          
+
         orderRepositoryMock
                 .Setup(x => x.OrderSummaryReadOnlyAsync(orderId))
                 .ReturnsAsync((Domain.Order)null);
-         
+
         var getOrderRequest = new GetOrderRequest(orderId);
 
         var validationException = Assert.ThrowsAsync<NotFoundException>(async () =>
@@ -138,7 +137,7 @@ public class GetOrderMediatrTests
     {
         Guid orderId = new("07c06c3f-0897-44b6-ae05-a70540e73a12");
         Guid customerId = new("29a75938-ce2d-473b-b7fe-2903fe97fd6e");
-        Guid customerAddressId = new Guid("724cbd34-3dff-4e2a-a413-48825f1ab3b9");
+        Guid customerAddressId = new("724cbd34-3dff-4e2a-a413-48825f1ab3b9");
 
         var orderItem1 = new Domain.OrderItem
         {
@@ -192,5 +191,5 @@ public class GetOrderMediatrTests
         });
 
         Assert.That(validationException.Message, Is.EqualTo($"Customer address not found for order."));
-    }     
+    }
 }
