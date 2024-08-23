@@ -5,8 +5,8 @@ namespace Microservice.Order.Api.Domain;
 
 [Table("MSOS_ProductType")]
 public class ProductType
-{ 
-     [Key]
+{
+    [Key]
     public Api.Helpers.Enums.ProductType Id { get; set; }
 
     [MaxLength(75)]

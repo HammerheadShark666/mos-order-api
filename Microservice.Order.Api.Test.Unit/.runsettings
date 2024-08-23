@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+	<RunConfiguration>
+		<EnvironmentVariables>
+			<AZURE_SERVICE_BUS_CONNECTION>test-connection</AZURE_SERVICE_BUS_CONNECTION>
+			<AZURE_SERVICE_BUS_QUEUE_ORDER_COMPLETED>test-queue</AZURE_SERVICE_BUS_QUEUE_ORDER_COMPLETED> 
+		</EnvironmentVariables>
+	</RunConfiguration>
+</RunSettings>

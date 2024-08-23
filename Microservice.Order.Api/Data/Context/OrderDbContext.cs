@@ -4,17 +4,17 @@ using Microsoft.EntityFrameworkCore;
 namespace Microservice.Order.Api.Data.Contexts;
 
 public class OrderDbContext : DbContext
-{ 
+{
     public OrderDbContext(DbContextOptions<OrderDbContext> options) : base(options) { }
- 
+
     public DbSet<Domain.Order> Orders { get; set; }
     public DbSet<Domain.OrderItem> OrderItems { get; set; }
     public DbSet<Domain.OrderStatus> OrderStatus { get; set; }
     public DbSet<Domain.ProductType> ProductType { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
-    { 
-        base.OnModelCreating(modelBuilder); 
+    {
+        base.OnModelCreating(modelBuilder);
 
         modelBuilder.HasSequence<int>("OrderNumberCounter");
 

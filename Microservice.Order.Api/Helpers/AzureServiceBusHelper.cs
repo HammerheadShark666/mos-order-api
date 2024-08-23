@@ -1,6 +1,5 @@
 ﻿using Azure.Messaging.ServiceBus;
-using Microservice.Order.Api.Helpers.Interfaces; 
-using Microsoft.Extensions.Logging;
+using Microservice.Order.Api.Helpers.Interfaces;
 
 namespace Microservice.Order.Api.Helpers;
 
@@ -11,10 +10,10 @@ public class AzureServiceBusHelper : IAzureServiceBusHelper
     public AzureServiceBusHelper(ILogger<AzureServiceBusHelper> logger) => _logger = logger;
 
     public async Task SendMessage(string queue, string data)
-    {  
+    {
         var client = new ServiceBusClient(EnvironmentVariables.AzureServiceBusConnection);
-        var sender = client.CreateSender(queue);  
+        var sender = client.CreateSender(queue);
 
         await sender.SendMessageAsync(new ServiceBusMessage(data));
-    } 
+    }
 }

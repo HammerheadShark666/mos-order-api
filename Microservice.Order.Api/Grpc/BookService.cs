@@ -8,13 +8,13 @@ using Microservice.Order.Api.Protos;
 namespace Microservice.Order.Api.Grpc;
 
 public class BookService(IJwtHelper jwtHelper) : IBookService
-{ 
+{
     private IJwtHelper _jwtHelper { get; set; } = jwtHelper;
     public record BookDetailResponse(Guid Id, string Name, decimal UnitPrice);
     public record NotFoundBookDetailsResponse(Guid Id);
     public record BookDetailsResponse(List<BookDetailResponse> bookDetailResponse, List<NotFoundBookDetailsResponse> notFoundBookDetailsResponse);
 
-    public async Task<BooksResponse> GetBooksDetailsAsync(List<Guid> productIds) 
+    public async Task<BooksResponse> GetBooksDetailsAsync(List<Guid> productIds)
     {
         ILoggerFactory _loggerFactory = LoggerFactory.Create(b => b.AddConsole());
         ILogger _logger = _loggerFactory.CreateLogger<BookService>();
@@ -41,19 +41,19 @@ public class BookService(IJwtHelper jwtHelper) : IBookService
     {
         var handler = new HttpClientHandler();
         handler.ServerCertificateCustomValidationCallback =
-            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator; 
+            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
 
         return handler;
     }
 
     private ListBookRequest GetListBookRequest(List<Guid> productIds)
     {
-        List<BookRequest> bookRequests = new List<BookRequest>();
+        List<BookRequest> bookRequests = new();
 
-        foreach(var productId in productIds)
+        foreach (var productId in productIds)
         {
             bookRequests.Add(new BookRequest() { Id = productId.ToString() });
-        } 
+        }
 
         return new ListBookRequest()
         {
@@ -62,33 +62,33 @@ public class BookService(IJwtHelper jwtHelper) : IBookService
     }
 
     private BookDetailsResponse GetBookDetailsResponse(BooksResponse response)
-    { 
-        return new BookDetailsResponse(GetBookDetailsFromResponse(response), 
+    {
+        return new BookDetailsResponse(GetBookDetailsFromResponse(response),
                                             GetNotFoundBookDetailsFromResponse(response));
     }
 
     private List<BookDetailResponse> GetBookDetailsFromResponse(BooksResponse booksResponse)
     {
-        List<BookDetailResponse> bookDetailsResponse = new List<BookDetailResponse>();
-       
+        List<BookDetailResponse> bookDetailsResponse = new();
+
         foreach (var bookResponse in booksResponse.BookResponses)
         {
-            Guid id = new Guid(bookResponse.Id);
+            Guid id = new(bookResponse.Id);
             string name = bookResponse.Name;
             decimal unitPrice = decimal.Parse(bookResponse.UnitPrice);
-             
+
             bookDetailsResponse.Add(new BookDetailResponse(id, name, unitPrice));
-        } 
+        }
 
         return bookDetailsResponse;
     }
 
     private List<NotFoundBookDetailsResponse> GetNotFoundBookDetailsFromResponse(BooksResponse booksResponse)
     {
-        List<NotFoundBookDetailsResponse> notFoundBookDetailsResponse = new List<NotFoundBookDetailsResponse>();
-         
+        List<NotFoundBookDetailsResponse> notFoundBookDetailsResponse = new();
+
         foreach (var notFoundbookResponse in booksResponse.NotFoundBookResponses)
-        { 
+        {
             notFoundBookDetailsResponse.Add(new NotFoundBookDetailsResponse(new Guid(notFoundbookResponse.Id)));
         }
 

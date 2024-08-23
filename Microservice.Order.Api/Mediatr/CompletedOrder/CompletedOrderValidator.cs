@@ -1,24 +1,25 @@
 ﻿using FluentValidation;
 using Microservice.Order.Api.Data.Repository.Interfaces;
-using Microservice.Order.Api.MediatR.CompletedOrder;
 
-namespace Microservice.Customer.Api.MediatR.AddCustomer;
+namespace Microservice.Order.Api.MediatR.CompletedOrder;
 
-public class completedOrderValidator : AbstractValidator<CompletedOrderRequest>
+public class CompletedOrderValidator : AbstractValidator<CompletedOrderRequest>
 {
     private readonly IOrderRepository _orderRepository;
 
-    public completedOrderValidator(IOrderRepository orderRepository)
+    public CompletedOrderValidator(IOrderRepository orderRepository)
     {
         _orderRepository = orderRepository;
 
-        RuleFor(completedOrderRequest => completedOrderRequest).MustAsync(async (completedOrderRequest, cancellation) => {
+        RuleFor(completedOrderRequest => completedOrderRequest).MustAsync(async (completedOrderRequest, cancellation) =>
+        {
             return await OrderNotFound(completedOrderRequest);
         }).WithMessage("Order not found, may have already been completed.");
 
-        RuleFor(completedOrderRequest => completedOrderRequest).MustAsync(async (completedOrderRequest, cancellation) => {
+        RuleFor(completedOrderRequest => completedOrderRequest).MustAsync(async (completedOrderRequest, cancellation) =>
+        {
             return await OrderAlreadyClosed(completedOrderRequest);
-        }).WithMessage("Order already closed.");       
+        }).WithMessage("Order already closed.");
     }
 
     protected async Task<bool> OrderAlreadyClosed(CompletedOrderRequest completedOrderRequest)
@@ -28,6 +29,6 @@ public class completedOrderValidator : AbstractValidator<CompletedOrderRequest>
 
     protected async Task<bool> OrderNotFound(CompletedOrderRequest completedOrderRequest)
     {
-        return !await _orderRepository.OrderNotFound(completedOrderRequest.OrderId);
+        return await _orderRepository.Exists(completedOrderRequest.OrderId);
     }
 }

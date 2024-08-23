@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microservice.Order.Api.MediatR.AddOrder;
 
 namespace Microservice.Order.Api.MediatR.CompletedOrder;
 

@@ -21,13 +21,13 @@ public class CustomerAddressService(IJwtHelper jwtHelper,
         ILoggerFactory _loggerFactory = LoggerFactory.Create(b => b.AddConsole());
         ILogger _logger = _loggerFactory.CreateLogger<CustomerAddressService>();
 
-        using var channel = GrpcChannel.ForAddress(EnvironmentVariables.GRPC_CustomerAddress_Url, new GrpcChannelOptions 
-        { 
+        using var channel = GrpcChannel.ForAddress(EnvironmentVariables.GRPC_CustomerAddress_Url, new GrpcChannelOptions
+        {
             HttpHandler = GetClientHandler(),
             LoggerFactory = _loggerFactory
         });
 
-        var invoker = channel.Intercept(new ClientLoggingInterceptor(_loggerFactory));  
+        var invoker = channel.Intercept(new ClientLoggingInterceptor(_loggerFactory));
         var client = new CustomerAddressGrpc.CustomerAddressGrpcClient(invoker);
         var response = await client.GetCustomerAddressAsync(GetCustomerAddressRequest(GetCustomerId(), addressId), GetGrpcHeaders());
 
@@ -68,7 +68,7 @@ public class CustomerAddressService(IJwtHelper jwtHelper,
     {
         var handler = new HttpClientHandler();
         handler.ServerCertificateCustomValidationCallback =
-            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator; 
+            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
 
         return handler;
     }

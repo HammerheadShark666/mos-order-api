@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using Grpc.Core;
 using Microservice.Order.Api.Helpers.Exceptions;
-using Microsoft.AspNetCore.Http;
 using System.Text.Json;
 
 namespace Microservice.Order.Api.Middleware;
@@ -20,14 +19,14 @@ internal sealed class ExceptionHandlingMiddleware : IMiddleware
         }
         catch (RpcException e)
         {
-            _logger.LogError(e, e.Message); 
+            _logger.LogError(e, e.Message);
             await HandleRpcExceptionAsync(context, e);
         }
         catch (Exception e)
         {
-            _logger.LogError(e, e.Message); 
+            _logger.LogError(e, e.Message);
             await HandleExceptionAsync(context, e);
-        } 
+        }
     }
 
     private static async Task HandleRpcExceptionAsync(HttpContext httpContext, RpcException exception)
@@ -41,10 +40,10 @@ internal sealed class ExceptionHandlingMiddleware : IMiddleware
         };
 
         await httpContext.Response.WriteAsync(JsonSerializer.Serialize(response));
-    } 
+    }
 
     private static async Task HandleExceptionAsync(HttpContext httpContext, Exception exception)
-    {  
+    {
         var statusCode = GetStatusCode(exception);
 
         httpContext.Response.ContentType = "application/json";
@@ -85,20 +84,20 @@ internal sealed class ExceptionHandlingMiddleware : IMiddleware
             NotFoundException => StatusCodes.Status404NotFound,
             ValidationException => StatusCodes.Status400BadRequest,
             _ => StatusCodes.Status500InternalServerError
-        }; 
+        };
 
     private static string GetMessage(Exception exception) =>
         exception switch
         {
             ValidationException => "Validation Error",
             _ => exception.Message
-        };  
-     
+        };
+
     private static IEnumerable<string> GetErrors(Exception exception)
-    { 
+    {
         if (exception is ValidationException validationException)
-        {  
-            foreach (var  error in validationException.Errors)
+        {
+            foreach (var error in validationException.Errors)
             {
                 yield return error.ErrorMessage;
             }

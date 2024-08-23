@@ -6,14 +6,14 @@ using Microsoft.EntityFrameworkCore;
 namespace Microservice.Order.Api.Data.Repository;
 
 public class OrderRepository(IDbContextFactory<OrderDbContext> dbContextFactory) : IOrderRepository
-{    
+{
     public IDbContextFactory<OrderDbContext> _dbContextFactory { get; set; } = dbContextFactory;
 
     public async Task<Domain.Order> AddAsync(Domain.Order order)
     {
         await using var db = await _dbContextFactory.CreateDbContextAsync();
         await db.AddAsync(order);
-        db.SaveChanges(); 
+        db.SaveChanges();
 
         return order;
     }
@@ -22,16 +22,16 @@ public class OrderRepository(IDbContextFactory<OrderDbContext> dbContextFactory)
     {
         using var db = _dbContextFactory.CreateDbContext();
 
-        db.Entry(order).State = EntityState.Modified; 
-        await db.SaveChangesAsync(); 
+        db.Entry(order).State = EntityState.Modified;
+        await db.SaveChangesAsync();
     }
 
     public async Task Delete(Domain.Order order)
-    { 
-        using var db = _dbContextFactory.CreateDbContext(); 
-         
+    {
+        using var db = _dbContextFactory.CreateDbContext();
+
         db.Orders.Remove(order);
-        await db.SaveChangesAsync(); 
+        await db.SaveChangesAsync();
     }
 
     public async Task<Domain.Order> GetByIdAsync(Guid id, Guid customerId)
@@ -54,31 +54,31 @@ public class OrderRepository(IDbContextFactory<OrderDbContext> dbContextFactory)
                         .Include(e => e.OrderStatus)
                         .OrderBy(e => e.Created)
                         .ToListAsync();
-    } 
+    }
 
     public async Task<Domain.Order> OrderSummaryReadOnlyAsync(Guid orderId)
     {
-        await using var db = await _dbContextFactory.CreateDbContextAsync();     
+        await using var db = await _dbContextFactory.CreateDbContextAsync();
         return await db.Orders.AsNoTracking()
                         .Where(o => o.Id.Equals(orderId))
                         .Include(e => e.OrderItems)
                         .Include("OrderItems.ProductType")
-                        .Include(e => e.OrderStatus) 
+                        .Include(e => e.OrderStatus)
                         .SingleOrDefaultAsync();
     }
 
-    public async Task<Boolean> OrderNotFound(Guid orderId)
+    public async Task<Boolean> Exists(Guid orderId)
     {
         await using var db = await _dbContextFactory.CreateDbContextAsync();
         return db.Orders.AsNoTracking()
-                        .Where(o => o.Id.Equals(orderId)).Count().Equals(0);
+                        .Where(o => o.Id.Equals(orderId)).Count().Equals(1);
     }
 
     public async Task<Boolean> OrderIsClosedAsync(Guid orderId)
     {
         await using var db = await _dbContextFactory.CreateDbContextAsync();
         return db.Orders.AsNoTracking()
-                        .Where(o => o.Id.Equals(orderId) && o.OrderStatusId.Equals(Enums.OrderStatus.Completed))                         
+                        .Where(o => o.Id.Equals(orderId) && o.OrderStatusId.Equals(Enums.OrderStatus.Completed))
                         .Count().Equals(1);
-    }    
+    }
 }

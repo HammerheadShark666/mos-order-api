@@ -2,5 +2,5 @@
 
 public interface IOrderHelper
 {
-   // static virtual string PaddedOrderNumber(int orderNumber);
+    // static virtual string PaddedOrderNumber(int orderNumber);
 }

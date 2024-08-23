@@ -8,7 +8,7 @@ public class Order
 {
     [Key]
     public Guid Id { get; set; }
-     
+
     public Guid CustomerId { get; set; }
 
     public Guid CustomerAddressId { get; set; }
@@ -21,14 +21,14 @@ public class Order
     [StringLength(50)]
     public string AddressForename { get; set; }
 
-    public int OrderNumber {  get; set; }
+    public int OrderNumber { get; set; }
 
     public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 
     public Helpers.Enums.OrderStatus OrderStatusId { get; set; }
 
     [ForeignKey(nameof(OrderStatusId))]
-    public OrderStatus OrderStatus { get; set; } 
+    public OrderStatus OrderStatus { get; set; }
 
     [Required]
     [Column(TypeName = "decimal(19, 2)")]

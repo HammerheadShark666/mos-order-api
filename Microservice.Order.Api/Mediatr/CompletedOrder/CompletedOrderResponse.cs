@@ -1,3 +1,3 @@
-namespace Microservice.Order.Api.MediatR.AddOrder;
+namespace Microservice.Order.Api.MediatR.CompletedOrder;
 
 public record CompletedOrderResponse(string message);
