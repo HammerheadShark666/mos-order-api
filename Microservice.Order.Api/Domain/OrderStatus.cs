@@ -12,5 +12,5 @@ public class OrderStatus
 
     [MaxLength(75)]
     [Required]
-    public string Status { get; set; }
+    public string Status { get; set; } = string.Empty;
 }

@@ -1,3 +1,5 @@
+// Ignore Spelling: Mediatr
+
 using FluentValidation;
 using MediatR;
 using Microservice.Order.Api.Data.Repository.Interfaces;
@@ -12,16 +14,16 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using System.Reflection;
 
-namespace Microservice.Order.Api.Test.Unit;
+namespace Microservice.Order.Api.Test.Unit.Mediatr;
 
 [TestFixture]
 public class AddOrderMediatrTests
 {
-    private Mock<ICustomerAddressService> customerAddressGrpcServiceMock = new();
-    private Mock<IBookService> bookGrpcServiceMock = new();
-    private Mock<IOrderRepository> orderRepositoryMock = new();
-    private Mock<ILogger<AddOrderCommandHandler>> loggerMock = new();
-    private ServiceCollection services = new();
+    private readonly Mock<ICustomerAddressService> customerAddressGrpcServiceMock = new();
+    private readonly Mock<IBookService> bookGrpcServiceMock = new();
+    private readonly Mock<IOrderRepository> orderRepositoryMock = new();
+    private readonly Mock<ILogger<AddOrderCommandHandler>> loggerMock = new();
+    private readonly ServiceCollection services = new();
     private ServiceProvider serviceProvider;
     private IMediator mediator;
 
@@ -31,10 +33,10 @@ public class AddOrderMediatrTests
         services.AddValidatorsFromAssemblyContaining<AddOrderValidator>();
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(AddOrderCommandHandler).Assembly));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidatorBehavior<,>));
-        services.AddScoped<IOrderRepository>(sp => orderRepositoryMock.Object);
-        services.AddScoped<ICustomerAddressService>(sp => customerAddressGrpcServiceMock.Object);
-        services.AddScoped<IBookService>(sp => bookGrpcServiceMock.Object);
-        services.AddScoped<ILogger<AddOrderCommandHandler>>(sp => loggerMock.Object);
+        services.AddScoped(sp => orderRepositoryMock.Object);
+        services.AddScoped(sp => customerAddressGrpcServiceMock.Object);
+        services.AddScoped(sp => bookGrpcServiceMock.Object);
+        services.AddScoped(sp => loggerMock.Object);
         services.AddAutoMapper(Assembly.GetAssembly(typeof(AddOrderMapper)));
 
         serviceProvider = services.BuildServiceProvider();
@@ -81,7 +83,7 @@ public class AddOrderMediatrTests
         var orderCreatedOrderItems = new List<OrderItem>() { new() {
             ProductId = new Guid("29a75938-ce2d-473b-b7fe-2903fe97fd6e"),
             Name = "Infinity Kings",
-            ProductType = new Domain.ProductType() { Id = Enums.ProductType.Book, Name = "Book" },
+            ProductType = new ProductType() { Id = Enums.ProductType.Book, Name = "Book" },
             Quantity = 1,
             UnitPrice = 9.99m
         }};
@@ -102,15 +104,20 @@ public class AddOrderMediatrTests
         orderRepositoryMock.Setup(x => x.AddAsync(orderCreated));
 
         var orderItem = new AddOrderItemRequest(new Guid("29a75938-ce2d-473b-b7fe-2903fe97fd6e"), 1, Enums.ProductType.Book);
-        var orderItems = new List<AddOrderItemRequest>();
-        orderItems.Add(orderItem);
+        var orderItems = new List<AddOrderItemRequest>
+        {
+            orderItem
+        };
 
         var addOrderRequest = new AddOrderRequest(customerId, customerAddressId, "", "", orderItems);
         var actualResult = await mediator.Send(addOrderRequest);
 
-        Assert.IsInstanceOf(typeof(Guid), actualResult.order.Id);
-        Assert.That(actualResult.order.OrderItems.Count, Is.EqualTo(1));
-        Assert.That(actualResult.invalidOrderItems.Count, Is.EqualTo(0));
+        Assert.Multiple(() =>
+        {
+            Assert.That(actualResult.order.Id, Is.InstanceOf(typeof(Guid)));
+            Assert.That(actualResult.order.OrderItems, Has.Count.EqualTo(1));
+            Assert.That(actualResult.invalidOrderItems, Has.Count.EqualTo(0));
+        });
     }
 
     [Test]
@@ -148,7 +155,7 @@ public class AddOrderMediatrTests
         var orderCreatedOrderItems = new List<OrderItem>() { new() {
             ProductId = new Guid("29a75938-ce2d-473b-b7fe-2903fe97fd6e"),
             Name = "Infinity Kings",
-            ProductType = new Domain.ProductType() { Id = Enums.ProductType.Book, Name = "Book" },
+            ProductType = new ProductType() { Id = Enums.ProductType.Book, Name = "Book" },
             Quantity = 1,
             UnitPrice = 9.99m
         }};
@@ -170,19 +177,24 @@ public class AddOrderMediatrTests
 
         var orderItemA = new AddOrderItemRequest(new Guid("29a75938-ce2d-473b-b7fe-2903fe97fd6e"), 1, Enums.ProductType.Book);
         var orderItemB = new AddOrderItemRequest(new Guid("07c06c3f-0897-44b6-ae05-a70540e73a12"), 1, Enums.ProductType.Book);
-        var orderItems = new List<AddOrderItemRequest>();
-        orderItems.Add(orderItemA);
-        orderItems.Add(orderItemB);
+        var orderItems = new List<AddOrderItemRequest>
+        {
+            orderItemA,
+            orderItemB
+        };
 
         var addOrderRequest = new AddOrderRequest(customerId, customerAddressId, "", "", orderItems);
         var actualResult = await mediator.Send(addOrderRequest);
 
-        Assert.IsInstanceOf(typeof(Guid), actualResult.order.Id);
-        Assert.That(actualResult.order.OrderItems.Count, Is.EqualTo(1));
-        Assert.That(actualResult.order.OrderItems[0].Name, Is.EqualTo("Infinity Kings"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(actualResult.order.Id, Is.InstanceOf(typeof(Guid)));
+            Assert.That(actualResult.order.OrderItems, Has.Count.EqualTo(1));
+            Assert.That(actualResult.order.OrderItems[0].Name, Is.EqualTo("Infinity Kings"));
 
-        Assert.That(actualResult.invalidOrderItems.Count, Is.EqualTo(1));
-        Assert.That(actualResult.invalidOrderItems[0].ProductId, Is.EqualTo(bookId2));
+            Assert.That(actualResult.invalidOrderItems, Has.Count.EqualTo(1));
+            Assert.That(actualResult.invalidOrderItems[0].ProductId, Is.EqualTo(bookId2));
+        });
     }
 
     [Test]
@@ -225,9 +237,11 @@ public class AddOrderMediatrTests
 
         var orderItemA = new AddOrderItemRequest(new Guid("29a75938-ce2d-473b-b7fe-2903fe97fd6e"), 1, Enums.ProductType.Book);
         var orderItemB = new AddOrderItemRequest(new Guid("07c06c3f-0897-44b6-ae05-a70540e73a12"), 1, Enums.ProductType.Book);
-        var orderItems = new List<AddOrderItemRequest>();
-        orderItems.Add(orderItemA);
-        orderItems.Add(orderItemB);
+        var orderItems = new List<AddOrderItemRequest>
+        {
+            orderItemA,
+            orderItemB
+        };
 
         var addOrderRequest = new AddOrderRequest(customerId, customerAddressId, "", "", orderItems);
 
