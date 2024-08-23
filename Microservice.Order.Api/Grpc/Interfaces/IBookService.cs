@@ -4,5 +4,5 @@ namespace Microservice.Order.Api.Grpc.Interfaces;
 
 public interface IBookService
 {
-    Task<BooksResponse> GetBooksDetailsAsync(List<Guid> productIds);    
+    Task<BooksResponse> GetBooksDetailsAsync(List<Guid> productIds);
 }

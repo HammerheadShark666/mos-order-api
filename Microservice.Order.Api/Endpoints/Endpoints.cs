@@ -29,7 +29,7 @@ public static class Endpoints
         .Produces<BadRequestException>((int)HttpStatusCode.BadRequest)
         .WithName("GetOrder")
         .WithApiVersionSet(app.GetApiVersionSet())
-        .MapToApiVersion(new ApiVersion(1, 0)) 
+        .MapToApiVersion(new ApiVersion(1, 0))
         .WithOpenApi(x => new OpenApiOperation(x)
         {
             Summary = "Get a order based on id.",
@@ -42,9 +42,9 @@ public static class Endpoints
             var customerId = http.User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (customerId == null)
                 throw new NotFoundException("Customer not found");
-        
+
             addOrderRequest = addOrderRequest with { CustomerId = new Guid(customerId) };
-        
+
             var addOrderResponse = await mediator.Send(addOrderRequest);
             return Results.Ok(addOrderResponse);
         })
@@ -53,7 +53,7 @@ public static class Endpoints
         .Produces<BadRequestException>((int)HttpStatusCode.BadRequest)
         .WithName("AddOrder")
         .WithApiVersionSet(app.GetApiVersionSet())
-        .MapToApiVersion(new ApiVersion(1, 0)) 
+        .MapToApiVersion(new ApiVersion(1, 0))
         .WithOpenApi(x => new OpenApiOperation(x)
         {
             Summary = "Add an order.",
@@ -62,7 +62,7 @@ public static class Endpoints
         });
 
         orderGroup.MapPost("/completed", [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)] async (CompletedOrderRequest completedOrderRequest, IMediator mediator, HttpContext http) =>
-        { 
+        {
             var completedOrderResponse = await mediator.Send(completedOrderRequest);
             return Results.Ok(completedOrderResponse);
         })

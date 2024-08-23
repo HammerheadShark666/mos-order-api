@@ -8,11 +8,11 @@ public class DefaultData
     {
         return new List<Domain.OrderStatus>()
         {
-            new Domain.OrderStatus { Id = Helpers.Enums.OrderStatus.Created, Status = "Created" },
-            new Domain.OrderStatus { Id = Helpers.Enums.OrderStatus.Paid, Status = "Paid" },
-            new Domain.OrderStatus { Id = Helpers.Enums.OrderStatus.Dispatched, Status = "Dispatched" },
-            new Domain.OrderStatus { Id = Helpers.Enums.OrderStatus.Recieved, Status = "Recieved" },
-            new Domain.OrderStatus { Id = Helpers.Enums.OrderStatus.Completed, Status = "Completed" }
+            new() { Id = Helpers.Enums.OrderStatus.Created, Status = "Created" },
+            new() { Id = Helpers.Enums.OrderStatus.Paid, Status = "Paid" },
+            new() { Id = Helpers.Enums.OrderStatus.Dispatched, Status = "Dispatched" },
+            new() { Id = Helpers.Enums.OrderStatus.Recieved, Status = "Recieved" },
+            new() { Id = Helpers.Enums.OrderStatus.Completed, Status = "Completed" }
         };
     }
 
@@ -20,8 +20,8 @@ public class DefaultData
     {
         return new List<Domain.ProductType>()
         {
-            new Domain.ProductType { Id = Api.Helpers.Enums.ProductType.Book, Name = "Book" },
-            new Domain.ProductType { Id = Api.Helpers.Enums.ProductType.Music, Name = "Music" }
+            new() { Id = Api.Helpers.Enums.ProductType.Book, Name = "Book" },
+            new() { Id = Api.Helpers.Enums.ProductType.Music, Name = "Music" }
         };
     }
 
@@ -34,7 +34,7 @@ public class DefaultData
             CreateOrder(new Guid("6f3e950c-5502-491f-911d-02e112318705"), new Guid("6c84d0a3-0c0c-435f-9ae0-4de09247ee15"), new Guid("724cbd34-3dff-4e2a-a413-48825f1ab3b9"), "Intergration_Test", "Intergration_Test", 3, new List<OrderItem>(), Helpers.Enums.OrderStatus.Dispatched, 2.50m),
             CreateOrder(new Guid("e7cc2320-6443-46bd-93f4-a2ae7b437287"), new Guid("929eaf82-e4fd-4efe-9cae-ce4d7e32d159"), new Guid("b88ef4ce-739f-4c1b-b6d6-9d0727515de8"), "Intergration_Test2", "Intergration_Test2", 4, new List<OrderItem>(), Helpers.Enums.OrderStatus.Recieved, 51.47m),
             CreateOrder(new Guid("30cfccfe-038c-4f20-a306-f0a2a9df0829"), new Guid("929eaf82-e4fd-4efe-9cae-ce4d7e32d159"), new Guid("b88ef4ce-739f-4c1b-b6d6-9d0727515de8"), "Intergration_Test2", "Intergration_Test2", 5, new List<OrderItem>(), Helpers.Enums.OrderStatus.Created, 24.98m),
-             
+
          };
     }
 

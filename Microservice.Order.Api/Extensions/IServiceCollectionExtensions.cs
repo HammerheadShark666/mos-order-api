@@ -32,12 +32,12 @@ public static class IServiceCollectionExtensions
     }
 
     public static void ConfigureJwt(this IServiceCollection services)
-    { 
+    {
         services.AddJwtAuthentication();
     }
 
     public static void ConfigureDI(this IServiceCollection services)
-    { 
+    {
         services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<IBookService, BookService>();
         services.AddScoped<ICustomerAddressService, CustomerAddressService>();
@@ -97,7 +97,7 @@ public static class IServiceCollectionExtensions
     }
 
     public static void ConfigureGrpc(this IServiceCollection services)
-    { 
+    {
         var retryPolicy = new MethodConfig
         {
             Names = { MethodName.Default },
@@ -109,8 +109,8 @@ public static class IServiceCollectionExtensions
                 BackoffMultiplier = 1,
                 RetryableStatusCodes = { StatusCode.Internal }
             }
-        }; 
-         
+        };
+
         var handler = new HttpClientHandler();
         handler.ServerCertificateCustomValidationCallback =
             HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
@@ -134,6 +134,6 @@ public static class IServiceCollectionExtensions
                     var provider = serviceProvider.GetRequiredService<IJwtHelper>();
                     var token = provider.GenerateJwtToken();
                     metadata.Add("Authorization", $"Bearer {token}");
-                });           
+                });
     }
 }

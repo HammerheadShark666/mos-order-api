@@ -2,19 +2,19 @@
 using Microservice.Order.Api.Helpers;
 using Microservice.Order.Api.Mediatr.CompletedOrder.Model;
 
-namespace Microservice.Order.Api.Mediatr.CompletedOrder;
+namespace Microservice.Order.Api.MediatR.CompletedOrder;
 
 public class CompletedOrderMapper : Profile
 {
     public CompletedOrderMapper()
-    { 
+    {
         base.CreateMap<Domain.OrderItem, OrderItemHistory>()
             .ForMember(m => m.ProductId, o => o.MapFrom(s => s.ProductId))
             .ForMember(m => m.Name, o => o.MapFrom(s => s.Name))
             .ForMember(m => m.ProductType, o => o.MapFrom(s => s.ProductType.Name))
             .ForMember(m => m.Quantity, o => o.MapFrom(s => s.Quantity))
             .ForMember(m => m.UnitPrice, o => o.MapFrom(s => s.UnitPrice));
-         
+
         base.CreateMap<Domain.Order, OrderHistory>()
             .ForMember(m => m.Id, o => o.MapFrom(s => s.Id))
             .ForMember(m => m.CustomerId, o => o.MapFrom(s => s.CustomerId))

@@ -6,36 +6,40 @@ using Microservice.Order.Api.Helpers;
 using Microservice.Order.Api.Helpers.Exceptions;
 using Microservice.Order.Api.Helpers.Interfaces;
 using Microservice.Order.Api.Mediatr.CompletedOrder.Model;
-using Microservice.Order.Api.MediatR.CompletedOrder;
 using System.Text.Json;
 
-namespace Microservice.Order.Api.MediatR.AddOrder;
+namespace Microservice.Order.Api.MediatR.CompletedOrder;
 
 public class CompletedOrderCommandHandler(IOrderRepository orderRepository,
                                           IAzureServiceBusHelper azureServiceBusHelper,
                                           ICustomerAddressService customerAddressService,
                                           ICustomerHttpAccessor customerHttpAccessor,
+                                          ILogger<CompletedOrderCommandHandler> logger,
                                           IMapper mapper) : IRequestHandler<CompletedOrderRequest, CompletedOrderResponse>
 {
     private ICustomerAddressService _customerAddressService { get; set; } = customerAddressService;
-    private IOrderRepository _orderRepository { get; set; } = orderRepository;    
+    private IOrderRepository _orderRepository { get; set; } = orderRepository;
     private IAzureServiceBusHelper _azureServiceBusHelper { get; set; } = azureServiceBusHelper;
     private ICustomerHttpAccessor _customerHttpAccessor { get; set; } = customerHttpAccessor;
     private IMapper _mapper { get; set; } = mapper;
+    private ILogger<CompletedOrderCommandHandler> _logger { get; set; } = logger;
 
     public async Task<CompletedOrderResponse> Handle(CompletedOrderRequest completedOrderRequest, CancellationToken cancellationToken)
-    { 
+    {
         var order = await UpdateOrderToCompleted(completedOrderRequest.OrderId);
         await SendOrderHistoryToServiceBusQueueAsync(order);
 
-        return new CompletedOrderResponse("Order completed."); 
+        return new CompletedOrderResponse("Order completed.");
     }
 
     private async Task<Domain.Order> UpdateOrderToCompleted(Guid orderId)
     {
         var order = await _orderRepository.GetByIdAsync(orderId, GetCustomerId());
         if (order == null)
-            throw new NotFoundException("Order not found.");
+        {
+            _logger.LogError($"Order not found for order - {orderId}");
+            throw new NotFoundException("Order not found for order.");
+        } 
 
         order.OrderStatusId = Enums.OrderStatus.Completed;
 
@@ -49,6 +53,7 @@ public class CompletedOrderCommandHandler(IOrderRepository orderRepository,
         var customerId = _customerHttpAccessor.CustomerId;
         if (Guid.Empty.Equals(customerId))
         {
+            _logger.LogError($"Customer not found - {customerId}");
             throw new NotFoundException("Customer not found.");
         }
 
@@ -58,11 +63,11 @@ public class CompletedOrderCommandHandler(IOrderRepository orderRepository,
     private string GetSerializedOrder(OrderHistory orderHistory)
     {
         return JsonSerializer.Serialize(orderHistory);
-    }    
+    }
 
     private async Task SendOrderHistoryToServiceBusQueueAsync(Domain.Order order)
-    { 
-        var orderHistory = _mapper.Map<OrderHistory>(order); 
+    {
+        var orderHistory = _mapper.Map<OrderHistory>(order);
 
         await GetOrderAddress(orderHistory, order);
         await _azureServiceBusHelper.SendMessage(EnvironmentVariables.AzureServiceBusQueueOrderCompleted, GetSerializedOrder(orderHistory));
@@ -72,7 +77,10 @@ public class CompletedOrderCommandHandler(IOrderRepository orderRepository,
     {
         var customerAddress = await _customerAddressService.GetCustomerAddressAsync(order.CustomerAddressId);
         if (customerAddress == null)
-            throw new NotFoundException($"Customer address not found for order id - {order.Id}");
+        {
+            _logger.LogError($"Customer address not found for order id - {order.Id}");
+            throw new NotFoundException("Customer address not found for order id.");
+        } 
 
         orderHistory.Address = new OrderHistoryAddress()
         {
@@ -85,4 +93,4 @@ public class CompletedOrderCommandHandler(IOrderRepository orderRepository,
             Postcode = customerAddress.Postcode
         };
     }
-} 
+}
