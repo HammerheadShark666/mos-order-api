@@ -25,4 +25,10 @@ public class Enums
         Recieved = 4,
         Completed = 5
     }
+
+    public enum ErrorType
+    {
+        Error,
+        Information
+    }
 }

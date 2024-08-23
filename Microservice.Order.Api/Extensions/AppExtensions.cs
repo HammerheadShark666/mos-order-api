@@ -1,5 +1,6 @@
 ﻿using Asp.Versioning;
 using Asp.Versioning.Builder;
+using Microservice.Order.Api.Middleware;
 
 namespace Microservice.Order.Api.Extensions;
 
@@ -33,5 +34,13 @@ public static class AppExtensions
                   .HasApiVersion(new ApiVersion(1))
                   .ReportApiVersions()
                   .Build();
+    }
+
+    public static void ConfigureMiddleware(this WebApplication app)
+    {
+        if (!app.Environment.IsDevelopment())
+        {
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
+        }
     }
 }

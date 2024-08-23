@@ -24,7 +24,7 @@ public class GetOrderQueryHandler(IOrderRepository orderRepository,
         {
             _logger.LogError($"Order not found for order - {getOrderRequest.Id}");
             throw new NotFoundException($"Order not found for order.");
-        }  
+        }
 
         var customerAddress = await _customerAddressService.GetCustomerAddressAsync(order.CustomerAddressId);
         if (customerAddress == null)
