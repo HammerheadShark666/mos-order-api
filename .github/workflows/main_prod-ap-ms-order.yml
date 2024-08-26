@@ -33,26 +33,9 @@ jobs:
         tags: prodcrmsordersystem.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_3cf82af2fffe4d75a978df5e61fdb518 }}/microserviceorder:${{ github.sha }}
         file: ./Microservice.Order.Api/Dockerfile
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
-    steps:
-    - name: Deploy to Azure Web App
-      id: deploy-to-webapp
-      uses: azure/webapps-deploy@v3
-      with:
-        app-name: 'prod-ap-ms-order'
-        slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_b0110411b6a14fe6a611d026230159c0 }}
-        images: 'prodcrmsordersystem.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_3cf82af2fffe4d75a978df5e61fdb518 }}/microserviceorder:${{ github.sha }}'
-
   unit-tests:
     runs-on: ubuntu-latest
-    needs: deploy
+    needs: build
     steps:
       - uses: actions/checkout@v4
 
@@ -67,9 +50,26 @@ jobs:
       - name: Unit Tests
         run: dotnet test Microservice.Order.Api.Test.Unit/Microservice.Order.Api.Test.Unit.csproj --logger "console;verbosity=detailed"
   
-  automated-api-tests:
+  deploy:
     runs-on: ubuntu-latest
     needs: unit-tests
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+    - name: Deploy to Azure Web App
+      id: deploy-to-webapp
+      uses: azure/webapps-deploy@v3
+      with:
+        app-name: 'prod-ap-ms-order'
+        slot-name: 'production'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_b0110411b6a14fe6a611d026230159c0 }}
+        images: 'prodcrmsordersystem.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_3cf82af2fffe4d75a978df5e61fdb518 }}/microserviceorder:${{ github.sha }}'
+ 
+  automated-api-tests:
+    runs-on: ubuntu-latest
+    needs: deploy
     steps:
       - uses: actions/checkout@v4
       - name: Install Postman CLI
