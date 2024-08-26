@@ -5,7 +5,7 @@ using FluentValidation;
 using Grpc.Core;
 using Grpc.Net.Client.Configuration;
 using MediatR;
-using Microservice.Order.Api.Data.Contexts;
+using Microservice.Order.Api.Data.Context;
 using Microservice.Order.Api.Data.Repository;
 using Microservice.Order.Api.Data.Repository.Interfaces;
 using Microservice.Order.Api.Grpc;
@@ -113,9 +113,11 @@ public static class IServiceCollectionExtensions
             }
         };
 
-        var handler = new HttpClientHandler();
-        handler.ServerCertificateCustomValidationCallback =
-            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+        var handler = new HttpClientHandler
+        {
+            ServerCertificateCustomValidationCallback =
+            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+        };
 
         services.AddGrpcClient<BookGrpc.BookGrpcClient>
                 (

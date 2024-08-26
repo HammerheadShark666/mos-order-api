@@ -12,7 +12,7 @@ public class BookService(IJwtHelper jwtHelper) : IBookService
     private IJwtHelper _jwtHelper { get; set; } = jwtHelper;
     public record BookDetailResponse(Guid Id, string Name, decimal UnitPrice);
     public record NotFoundBookDetailsResponse(Guid Id);
-    public record BookDetailsResponse(List<BookDetailResponse> bookDetailResponse, List<NotFoundBookDetailsResponse> notFoundBookDetailsResponse);
+    public record BookDetailsResponse(List<BookDetailResponse> BookDetailResponse, List<NotFoundBookDetailsResponse> NotFoundBookDetailsResponse);
 
     public async Task<BooksResponse> GetBooksDetailsAsync(List<Guid> productIds)
     {
@@ -31,24 +31,28 @@ public class BookService(IJwtHelper jwtHelper) : IBookService
 
     private Metadata GetGrpcHeaders()
     {
-        var headers = new Metadata();
-        headers.Add("Authorization", $"Bearer {_jwtHelper.GenerateJwtToken()}");
+        var headers = new Metadata
+        {
+            { "Authorization", $"Bearer {_jwtHelper.GenerateJwtToken()}" }
+        };
 
         return headers;
     }
 
-    private HttpClientHandler GetClientHandler()
+    private static HttpClientHandler GetClientHandler()
     {
-        var handler = new HttpClientHandler();
-        handler.ServerCertificateCustomValidationCallback =
-            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+        var handler = new HttpClientHandler
+        {
+            ServerCertificateCustomValidationCallback =
+            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+        };
 
         return handler;
     }
 
-    private ListBookRequest GetListBookRequest(List<Guid> productIds)
+    private static ListBookRequest GetListBookRequest(List<Guid> productIds)
     {
-        List<BookRequest> bookRequests = new();
+        List<BookRequest> bookRequests = [];
 
         foreach (var productId in productIds)
         {
@@ -61,15 +65,15 @@ public class BookService(IJwtHelper jwtHelper) : IBookService
         };
     }
 
-    private BookDetailsResponse GetBookDetailsResponse(BooksResponse response)
+    private static BookDetailsResponse GetBookDetailsResponse(BooksResponse response)
     {
         return new BookDetailsResponse(GetBookDetailsFromResponse(response),
                                             GetNotFoundBookDetailsFromResponse(response));
     }
 
-    private List<BookDetailResponse> GetBookDetailsFromResponse(BooksResponse booksResponse)
+    private static List<BookDetailResponse> GetBookDetailsFromResponse(BooksResponse booksResponse)
     {
-        List<BookDetailResponse> bookDetailsResponse = new();
+        List<BookDetailResponse> bookDetailsResponse = [];
 
         foreach (var bookResponse in booksResponse.BookResponses)
         {
@@ -83,9 +87,9 @@ public class BookService(IJwtHelper jwtHelper) : IBookService
         return bookDetailsResponse;
     }
 
-    private List<NotFoundBookDetailsResponse> GetNotFoundBookDetailsFromResponse(BooksResponse booksResponse)
+    private static List<NotFoundBookDetailsResponse> GetNotFoundBookDetailsFromResponse(BooksResponse booksResponse)
     {
-        List<NotFoundBookDetailsResponse> notFoundBookDetailsResponse = new();
+        List<NotFoundBookDetailsResponse> notFoundBookDetailsResponse = [];
 
         foreach (var notFoundbookResponse in booksResponse.NotFoundBookResponses)
         {

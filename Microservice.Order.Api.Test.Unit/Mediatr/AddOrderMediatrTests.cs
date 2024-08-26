@@ -114,9 +114,9 @@ public class AddOrderMediatrTests
 
         Assert.Multiple(() =>
         {
-            Assert.That(actualResult.order.Id, Is.InstanceOf(typeof(Guid)));
-            Assert.That(actualResult.order.OrderItems, Has.Count.EqualTo(1));
-            Assert.That(actualResult.invalidOrderItems, Has.Count.EqualTo(0));
+            Assert.That(actualResult.Order.Id, Is.InstanceOf(typeof(Guid)));
+            Assert.That(actualResult.Order.OrderItems, Has.Count.EqualTo(1));
+            Assert.That(actualResult.InvalidOrderItems, Has.Count.EqualTo(0));
         });
     }
 
@@ -188,12 +188,12 @@ public class AddOrderMediatrTests
 
         Assert.Multiple(() =>
         {
-            Assert.That(actualResult.order.Id, Is.InstanceOf(typeof(Guid)));
-            Assert.That(actualResult.order.OrderItems, Has.Count.EqualTo(1));
-            Assert.That(actualResult.order.OrderItems[0].Name, Is.EqualTo("Infinity Kings"));
+            Assert.That(actualResult.Order.Id, Is.InstanceOf(typeof(Guid)));
+            Assert.That(actualResult.Order.OrderItems, Has.Count.EqualTo(1));
+            Assert.That(actualResult.Order.OrderItems[0].Name, Is.EqualTo("Infinity Kings"));
 
-            Assert.That(actualResult.invalidOrderItems, Has.Count.EqualTo(1));
-            Assert.That(actualResult.invalidOrderItems[0].ProductId, Is.EqualTo(bookId2));
+            Assert.That(actualResult.InvalidOrderItems, Has.Count.EqualTo(1));
+            Assert.That(actualResult.InvalidOrderItems[0].ProductId, Is.EqualTo(bookId2));
         });
     }
 

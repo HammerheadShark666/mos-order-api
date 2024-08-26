@@ -16,9 +16,9 @@ namespace Microservice.Order.Api.Endpoints;
 
 public static class Endpoints
 {
-    public static void ConfigureRoutes(this WebApplication app, ConfigurationManager configuration)
+    public static void ConfigureRoutes(this WebApplication webApplication)
     {
-        var orderGroup = app.MapGroup("v{version:apiVersion}/orders").WithTags("orders");
+        var orderGroup = webApplication.MapGroup("v{version:apiVersion}/orders").WithTags("orders");
 
         orderGroup.MapGet("/{id}", [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)] async ([FromRoute] Guid id, [FromServices] IMediator mediator) =>
         {
@@ -28,21 +28,18 @@ public static class Endpoints
         .Produces<GetOrderResponse>((int)HttpStatusCode.OK)
         .Produces<BadRequestException>((int)HttpStatusCode.BadRequest)
         .WithName("GetOrder")
-        .WithApiVersionSet(app.GetApiVersionSet())
+        .WithApiVersionSet(webApplication.GetApiVersionSet())
         .MapToApiVersion(new ApiVersion(1, 0))
         .WithOpenApi(x => new OpenApiOperation(x)
         {
             Summary = "Get a order based on id.",
             Description = "Gets a order based on its id.",
-            Tags = new List<OpenApiTag> { new() { Name = "Microservice Order System - Orders" } }
+            Tags = [new() { Name = "Microservice Order System - Orders" }]
         });
 
         orderGroup.MapPost("/add", [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)] async (AddOrderRequest addOrderRequest, IMediator mediator, HttpContext http) =>
         {
-            var customerId = http.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (customerId == null)
-                throw new NotFoundException("Customer not found");
-
+            var customerId = http.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new NotFoundException("Customer not found");
             addOrderRequest = addOrderRequest with { CustomerId = new Guid(customerId) };
 
             var addOrderResponse = await mediator.Send(addOrderRequest);
@@ -52,13 +49,13 @@ public static class Endpoints
         .Produces<AddOrderResponse>((int)HttpStatusCode.OK)
         .Produces<BadRequestException>((int)HttpStatusCode.BadRequest)
         .WithName("AddOrder")
-        .WithApiVersionSet(app.GetApiVersionSet())
+        .WithApiVersionSet(webApplication.GetApiVersionSet())
         .MapToApiVersion(new ApiVersion(1, 0))
         .WithOpenApi(x => new OpenApiOperation(x)
         {
             Summary = "Add an order.",
             Description = "Adds an order.",
-            Tags = new List<OpenApiTag> { new() { Name = "Microservice Order System - Orders" } }
+            Tags = [new() { Name = "Microservice Order System - Orders" }]
         });
 
         orderGroup.MapPost("/completed", [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)] async (CompletedOrderRequest completedOrderRequest, IMediator mediator, HttpContext http) =>
@@ -70,13 +67,13 @@ public static class Endpoints
         .Produces<CompletedOrderResponse>((int)HttpStatusCode.OK)
         .Produces<BadRequestException>((int)HttpStatusCode.BadRequest)
         .WithName("CompletedOrder")
-        .WithApiVersionSet(app.GetApiVersionSet())
+        .WithApiVersionSet(webApplication.GetApiVersionSet())
         .MapToApiVersion(new ApiVersion(1, 0))
         .WithOpenApi(x => new OpenApiOperation(x)
         {
             Summary = "Completes an order.",
             Description = "Completes an order.",
-            Tags = new List<OpenApiTag> { new() { Name = "Microservice Order System - Orders" } }
+            Tags = [new() { Name = "Microservice Order System - Orders" }]
         });
     }
 }

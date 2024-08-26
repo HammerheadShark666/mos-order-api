@@ -1,12 +1,9 @@
-﻿using Microservice.Order.Api.Data.Context;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace Microservice.Order.Api.Data.Contexts;
+namespace Microservice.Order.Api.Data.Context;
 
-public class OrderDbContext : DbContext
+public class OrderDbContext(DbContextOptions<OrderDbContext> options) : DbContext(options)
 {
-    public OrderDbContext(DbContextOptions<OrderDbContext> options) : base(options) { }
-
     public DbSet<Domain.Order> Orders { get; set; }
     public DbSet<Domain.OrderItem> OrderItems { get; set; }
     public DbSet<Domain.OrderStatus> OrderStatus { get; set; }
@@ -31,8 +28,3 @@ public class OrderDbContext : DbContext
         modelBuilder.Entity<Domain.OrderItem>().HasData(DefaultData.GetOrderItemDefaultData());
     }
 }
-
-//add-migration
-//update-database
-
-//azurite --silent --location c:\azurite --debug c:\azurite\debug.log
