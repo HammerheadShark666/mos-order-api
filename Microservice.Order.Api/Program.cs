@@ -30,6 +30,6 @@ app.UseAuthorization();
 app.MapControllers();
 app.ConfigureMiddleware();
 
-Endpoints.ConfigureRoutes(app, builder.Configuration);
+Endpoints.ConfigureRoutes(app);
 
 app.Run();

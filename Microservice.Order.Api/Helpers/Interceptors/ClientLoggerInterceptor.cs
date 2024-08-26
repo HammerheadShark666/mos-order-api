@@ -3,14 +3,9 @@ using Grpc.Core.Interceptors;
 
 namespace Microservice.Order.Api.Helpers.Interceptors;
 
-public class ClientLoggingInterceptor : Interceptor
+public class ClientLoggingInterceptor(ILoggerFactory loggerFactory) : Interceptor
 {
-    private readonly ILogger _logger;
-
-    public ClientLoggingInterceptor(ILoggerFactory loggerFactory)
-    {
-        _logger = loggerFactory.CreateLogger<ClientLoggingInterceptor>();
-    }
+    private readonly ILogger _logger = loggerFactory.CreateLogger<ClientLoggingInterceptor>();
 
     public override AsyncUnaryCall<TResponse> AsyncUnaryCall<TRequest, TResponse>(
         TRequest request,

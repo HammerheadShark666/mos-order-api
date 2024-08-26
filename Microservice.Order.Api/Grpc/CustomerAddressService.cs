@@ -47,7 +47,7 @@ public class CustomerAddressService(IJwtHelper jwtHelper,
         return customerId;
     }
 
-    private CustomerAddressRequest GetCustomerAddressRequest(Guid customerId, Guid addressId)
+    private static CustomerAddressRequest GetCustomerAddressRequest(Guid customerId, Guid addressId)
     {
         return new CustomerAddressRequest()
         {
@@ -58,17 +58,21 @@ public class CustomerAddressService(IJwtHelper jwtHelper,
 
     private Metadata GetGrpcHeaders()
     {
-        var headers = new Metadata();
-        headers.Add("Authorization", $"Bearer {_jwtHelper.GenerateJwtToken()}");
+        var headers = new Metadata
+        {
+            { "Authorization", $"Bearer {_jwtHelper.GenerateJwtToken()}" }
+        };
 
         return headers;
     }
 
-    private HttpClientHandler GetClientHandler()
+    private static HttpClientHandler GetClientHandler()
     {
-        var handler = new HttpClientHandler();
-        handler.ServerCertificateCustomValidationCallback =
-            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+        var handler = new HttpClientHandler
+        {
+            ServerCertificateCustomValidationCallback =
+            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+        };
 
         return handler;
     }

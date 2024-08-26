@@ -1,6 +1,6 @@
 namespace Microservice.Order.Api.MediatR.AddOrder;
 
-public record AddOrderResponse(AddOrderOrderResponse order, List<AddOrderInvalidOrderItemResponse> invalidOrderItems);
+public record AddOrderResponse(AddOrderOrderResponse Order, List<AddOrderInvalidOrderItemResponse> InvalidOrderItems);
 
 public record AddOrderInvalidOrderItemResponse(Guid ProductId, int Quantity);
 

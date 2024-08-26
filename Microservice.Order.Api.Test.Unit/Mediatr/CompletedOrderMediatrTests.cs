@@ -123,7 +123,7 @@ public class CompletedOrderMediatrTests
         var completedOrderRequest = new CompletedOrderRequest(orderId);
         var actualResult = await mediator.Send(completedOrderRequest);
 
-        Assert.That(actualResult.message, Is.EqualTo("Order completed."));
+        Assert.That(actualResult.Message, Is.EqualTo("Order completed."));
     }
 
     //[Test]
