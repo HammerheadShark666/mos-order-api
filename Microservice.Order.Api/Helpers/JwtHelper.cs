@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Microservice.Order.Api.Helpers;
 public class JwtHelper(IConfiguration configuration) : IJwtHelper
-{ 
+{
     private const int ExpirationMinutes = 60;
 
     public string GenerateJwtToken()
