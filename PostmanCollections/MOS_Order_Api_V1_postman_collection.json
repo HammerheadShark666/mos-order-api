@@ -51,7 +51,7 @@
               "host": [
                 "{{authentication_url}}"
               ],
-              "path": [                
+              "path": [
                 "v1",
                 "login"
               ]
@@ -65,7 +65,7 @@
       "name": "Order",
       "item": [
         {
-          "name": "{{order_url}}/v1/orders/add",
+          "name": "{{order_url}}/v1/order/add",
           "event": [
             {
               "listen": "test",
@@ -122,14 +122,14 @@
               }
             },
             "url": {
-              "raw": "https://{{order_url}}/v1/orders/add",
+              "raw": "https://{{order_url}}/v1/order/add",
               "protocol": "https",
               "host": [
                 "{{order_url}}"
               ],
-              "path": [                
+              "path": [
                 "v1",
-                "orders",
+                "order",
                 "add"
               ]
             }
@@ -137,7 +137,7 @@
           "response": []
         },
         {
-          "name": "{{order_url}}/v1/orders/{{order_id}}",
+          "name": "{{order_url}}/v1/order/{{order_id}}",
           "event": [
             {
               "listen": "test",
@@ -170,14 +170,14 @@
               }
             ],
             "url": {
-              "raw": "https://{{order_url}}/v1/orders/{{order_id}}",
+              "raw": "https://{{order_url}}/v1/order/{{order_id}}",
               "protocol": "https",
               "host": [
                 "{{order_url}}"
               ],
-              "path": [                
+              "path": [
                 "v1",
-                "orders",
+                "order",
                 "{{order_id}}"
               ]
             }
@@ -185,7 +185,7 @@
           "response": []
         },
         {
-          "name": "{{order_url}}/v1/orders/completed",
+          "name": "{{order_url}}/v1/order/completed",
           "event": [
             {
               "listen": "test",
@@ -222,14 +222,14 @@
               }
             },
             "url": {
-              "raw": "https://{{order_url}}/v1/orders/completed",
+              "raw": "https://{{order_url}}/v1/order/completed",
               "protocol": "https",
               "host": [
                 "{{order_url}}"
               ],
-              "path": [                
+              "path": [
                 "v1",
-                "orders",
+                "order",
                 "completed"
               ]
             }
