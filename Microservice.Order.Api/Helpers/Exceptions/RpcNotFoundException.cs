@@ -2,10 +2,7 @@
 
 namespace Microservice.Order.Api.Helpers.Exceptions;
 
-public class RpcNotFoundException : RpcException
+public class RpcNotFoundException(Status status) : RpcException(status)
 {
-    public RpcNotFoundException(Status status) : base(status)
-    {
-    }
 }
 
