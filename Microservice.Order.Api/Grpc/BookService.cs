@@ -63,38 +63,4 @@ public class BookService(IJwtHelper jwtHelper) : IBookService
             BookRequests = { bookRequests }
         };
     }
-
-    //private static BookDetailsResponse GetBookDetailsResponse(BooksResponse response)
-    //{
-    //    return new BookDetailsResponse(GetBookDetailsFromResponse(response),
-    //                                        GetNotFoundBookDetailsFromResponse(response));
-    //}
-
-    //private static List<BookDetailResponse> GetBookDetailsFromResponse(BooksResponse booksResponse)
-    //{
-    //    List<BookDetailResponse> bookDetailsResponse = [];
-
-    //    foreach (var bookResponse in booksResponse.BookResponses)
-    //    {
-    //        Guid id = new(bookResponse.Id);
-    //        string name = bookResponse.Name;
-    //        decimal unitPrice = decimal.Parse(bookResponse.UnitPrice);
-
-    //        bookDetailsResponse.Add(new BookDetailResponse(id, name, unitPrice));
-    //    }
-
-    //    return bookDetailsResponse;
-    //}
-
-    //private static List<NotFoundBookDetailsResponse> GetNotFoundBookDetailsFromResponse(BooksResponse booksResponse)
-    //{
-    //    List<NotFoundBookDetailsResponse> notFoundBookDetailsResponse = [];
-
-    //    foreach (var notFoundbookResponse in booksResponse.NotFoundBookResponses)
-    //    {
-    //        notFoundBookDetailsResponse.Add(new NotFoundBookDetailsResponse(new Guid(notFoundbookResponse.Id)));
-    //    }
-
-    //    return notFoundBookDetailsResponse;
-    //}
 }
