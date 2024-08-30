@@ -7,6 +7,7 @@ using Microservice.Order.Api.Domain;
 using Microservice.Order.Api.Grpc.Interfaces;
 using Microservice.Order.Api.Helpers;
 using Microservice.Order.Api.Helpers.Exceptions;
+using Microservice.Order.Api.Helpers.Interfaces;
 using Microservice.Order.Api.MediatR.AddOrder;
 using Microservice.Order.Api.Protos;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,6 +38,7 @@ public class AddOrderMediatrTests
         services.AddScoped(sp => customerAddressGrpcServiceMock.Object);
         services.AddScoped(sp => bookGrpcServiceMock.Object);
         services.AddScoped(sp => loggerMock.Object);
+        services.AddScoped<IOrderHelper, OrderHelper>();
         services.AddAutoMapper(Assembly.GetAssembly(typeof(AddOrderMapper)));
 
         serviceProvider = services.BuildServiceProvider();

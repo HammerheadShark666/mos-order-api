@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microservice.Order.Api.Helpers;
 using Microservice.Order.Api.Helpers.Interfaces;
 using Microservice.Order.Api.Mediatr.CompletedOrder.Model;
 
@@ -6,7 +7,9 @@ namespace Microservice.Order.Api.MediatR.CompletedOrder;
 
 public class CompletedOrderMapper : Profile
 {
-    public CompletedOrderMapper(IOrderHelper orderHelper)
+    private IOrderHelper orderHelper = new OrderHelper();
+
+    public CompletedOrderMapper()
     {
         base.CreateMap<Domain.OrderItem, OrderItemHistory>()
             .ForMember(m => m.ProductId, o => o.MapFrom(s => s.ProductId))
