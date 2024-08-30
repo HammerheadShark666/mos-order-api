@@ -13,9 +13,6 @@ namespace Microservice.Order.Api.Grpc;
 public class CustomerAddressService(IJwtHelper jwtHelper,
                                     ICustomerHttpAccessor customerHttpAccessor) : ICustomerAddressService
 {
-    private IJwtHelper _jwtHelper { get; set; } = jwtHelper;
-    private ICustomerHttpAccessor _customerHttpAccessor { get; set; } = customerHttpAccessor;
-
     public async Task<CustomerAddressResponse> GetCustomerAddressAsync(Guid addressId)
     {
         ILoggerFactory _loggerFactory = LoggerFactory.Create(b => b.AddConsole());
@@ -38,7 +35,7 @@ public class CustomerAddressService(IJwtHelper jwtHelper,
 
     private Guid GetCustomerId()
     {
-        var customerId = _customerHttpAccessor.CustomerId;
+        var customerId = customerHttpAccessor.CustomerId;
         if (Guid.Empty.Equals(customerId))
         {
             throw new NotFoundException("Customer not found.");
@@ -60,7 +57,7 @@ public class CustomerAddressService(IJwtHelper jwtHelper,
     {
         var headers = new Metadata
         {
-            { "Authorization", $"Bearer {_jwtHelper.GenerateJwtToken()}" }
+            { "Authorization", $"Bearer {jwtHelper.GenerateJwtToken()}" }
         };
 
         return headers;

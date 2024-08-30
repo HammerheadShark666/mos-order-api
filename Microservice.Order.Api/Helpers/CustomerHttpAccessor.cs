@@ -2,13 +2,18 @@
 
 namespace Microservice.Order.Api.Helpers;
 
-public class CustomerHttpAccessor : Interfaces.ICustomerHttpAccessor
+public class CustomerHttpAccessor(IHttpContextAccessor accessor) : Interfaces.ICustomerHttpAccessor
 {
-    private readonly IHttpContextAccessor _accessor;
-    public CustomerHttpAccessor(IHttpContextAccessor accessor)
+    public Guid CustomerId
     {
-        _accessor = accessor;
-    }
+        get
+        {
+            if (accessor == null || accessor.HttpContext == null || accessor.HttpContext.User == null)
+                throw new ArgumentNullException("IHttpContextAccessor not found.");
 
-    public Guid CustomerId => new(_accessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var customerId = accessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            return customerId == null ? throw new ArgumentNullException("NameIdentifier not found with customer Id.") : new(customerId);
+        }
+    }
 }

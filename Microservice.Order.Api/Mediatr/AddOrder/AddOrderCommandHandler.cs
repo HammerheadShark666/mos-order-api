@@ -5,25 +5,21 @@ using Microservice.Order.Api.Domain;
 using Microservice.Order.Api.Grpc.Interfaces;
 using Microservice.Order.Api.Helpers;
 using Microservice.Order.Api.Helpers.Exceptions;
+using Microservice.Order.Api.Helpers.Interfaces;
 using Microservice.Order.Api.Protos;
 
 namespace Microservice.Order.Api.MediatR.AddOrder;
 
 public class AddOrderCommandHandler(IOrderRepository orderRepository,
                                     IBookService bookService,
+                                    IOrderHelper orderHelper,
                                     ICustomerAddressService customerAddressService,
                                     ILogger<AddOrderCommandHandler> logger,
                                     IMapper mapper) : IRequestHandler<AddOrderRequest, AddOrderResponse>
 {
-    private IOrderRepository _orderRepository { get; set; } = orderRepository;
-    private IBookService _bookService { get; set; } = bookService;
-    private ICustomerAddressService _customerAddressService { get; set; } = customerAddressService;
-    private IMapper _mapper { get; set; } = mapper;
-    private ILogger<AddOrderCommandHandler> _logger { get; set; } = logger;
-
     public async Task<AddOrderResponse> Handle(AddOrderRequest addOrderRequest, CancellationToken cancellationToken)
     {
-        var order = _mapper.Map<Domain.Order>(addOrderRequest);
+        var order = mapper.Map<Domain.Order>(addOrderRequest);
 
         var invalidOrderItems = await UpdateOrderItemsAsync(order);
         CalculateOrderTotal(order);
@@ -31,21 +27,21 @@ public class AddOrderCommandHandler(IOrderRepository orderRepository,
 
         var orderAddress = await GetOrderAddressAsync(addOrderRequest.CustomerAddressId);
 
-        await _orderRepository.AddAsync(order);
+        await orderRepository.AddAsync(order);
 
         return GetAddOrderResponse(order, invalidOrderItems, orderAddress);
     }
 
     private AddOrderResponse GetAddOrderResponse(Domain.Order order, List<OrderItem> invalidOrderItems, AddOrderAddressResponse addOrderAddressResponse)
     {
-        return new AddOrderResponse(GetOrderResponse(order, addOrderAddressResponse), _mapper.Map<List<AddOrderInvalidOrderItemResponse>>(invalidOrderItems));
+        return new AddOrderResponse(GetOrderResponse(order, addOrderAddressResponse), mapper.Map<List<AddOrderInvalidOrderItemResponse>>(invalidOrderItems));
     }
 
     private AddOrderOrderResponse GetOrderResponse(Domain.Order order, AddOrderAddressResponse addOrderAddressResponse)
     {
-        var orderItemsResponse = _mapper.Map<List<AddOrderOrderItemResponse>>(order.OrderItems);
+        var orderItemsResponse = mapper.Map<List<AddOrderOrderItemResponse>>(order.OrderItems);
 
-        return new AddOrderOrderResponse(order.Id, OrderHelper.PaddedOrderNumber(order.OrderNumber),
+        return new AddOrderOrderResponse(order.Id, orderHelper.PaddedOrderNumber(order.OrderNumber),
                                             order.AddressSurname, order.AddressForename, orderItemsResponse,
                                                 order.Total, Enums.OrderStatus.Created.ToString(),
                                                     DateOnly.FromDateTime(order.Created).ToString(Constants.DateFormat_ddMMyyyy),
@@ -54,14 +50,14 @@ public class AddOrderCommandHandler(IOrderRepository orderRepository,
 
     private async Task<AddOrderAddressResponse> GetOrderAddressAsync(Guid customerAddressId)
     {
-        var customerAddress = await _customerAddressService.GetCustomerAddressAsync(customerAddressId);
+        var customerAddress = await customerAddressService.GetCustomerAddressAsync(customerAddressId);
         if (customerAddress == null)
         {
-            _logger.LogError("{message}", "Customer address not found for id - {customerAddressId}");
+            logger.LogError("{message}", "Customer address not found for id - {customerAddressId}");
             throw new NotFoundException("Customer address not found.");
         }
 
-        return _mapper.Map<AddOrderAddressResponse>(customerAddress);
+        return mapper.Map<AddOrderAddressResponse>(customerAddress);
     }
 
     public void SetOrderId(Domain.Order order)
@@ -78,7 +74,7 @@ public class AddOrderCommandHandler(IOrderRepository orderRepository,
     {
         order.Total = (decimal)order.OrderItems
                                     .Where(c => c.UnitPrice != null)
-                                    .Sum(c => ((double)c.UnitPrice) * c.Quantity);
+                                    .Sum(c => ((double)(c.UnitPrice ?? 0.0m) * c.Quantity));
     }
 
     private async Task<List<OrderItem>> UpdateOrderItemsAsync(Domain.Order order)
@@ -130,7 +126,7 @@ public class AddOrderCommandHandler(IOrderRepository orderRepository,
     private async Task<List<OrderItem>> UpdateOrderItemsBookDetailsAsync(List<OrderItem> orderItems, Domain.Order order)
     {
         BooksResponse bookDetailsResponse
-                    = await _bookService.GetBooksDetailsAsync(GetProductIds(orderItems));
+                    = await bookService.GetBooksDetailsAsync(GetProductIds(orderItems));
 
         foreach (var bookDetailResponse in bookDetailsResponse.BookResponses)
         {

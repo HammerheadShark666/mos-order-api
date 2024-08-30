@@ -17,7 +17,6 @@ using Microservice.Order.Api.Helpers.Swagger;
 using Microservice.Order.Api.MediatR.AddOrder;
 using Microservice.Order.Api.Middleware;
 using Microservice.Order.Api.Protos;
-using Microservice.Order.Grpc.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
@@ -133,11 +132,12 @@ public static class IServiceCollectionExtensions
                         }
                     };
                 })
-                .AddCallCredentials(async (context, metadata, serviceProvider) =>
+                .AddCallCredentials((context, metadata, serviceProvider) =>
                 {
                     var provider = serviceProvider.GetRequiredService<IJwtHelper>();
                     var token = provider.GenerateJwtToken();
                     metadata.Add("Authorization", $"Bearer {token}");
+                    return Task.CompletedTask;
                 });
     }
 }

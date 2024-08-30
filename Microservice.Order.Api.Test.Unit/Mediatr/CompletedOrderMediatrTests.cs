@@ -126,43 +126,6 @@ public class CompletedOrderMediatrTests
         Assert.That(actualResult.Message, Is.EqualTo("Order completed."));
     }
 
-    //[Test]
-    //public void Complete_order_customer_not_found_return_exception()
-    //{
-    //    Guid orderId = new("07c06c3f-0897-44b6-ae05-a70540e73a12");
-    //    Guid customerId = new("29a75938-ce2d-473b-b7fe-2903fe97fd6e");
-
-    //    var completedOrderRequest = new CompletedOrderRequest(orderId);
-    //    var validationException = Assert.ThrowsAsync<NotFoundException>(async () =>
-    //    {
-    //        await mediator.Send(completedOrderRequest);
-    //    });
-
-    //    Assert.That(validationException.Message, Is.EqualTo($"Customer not found."));
-    //}
-
-    //[Test]
-    //public void Complete_order_order_not_found_return_exception()
-    //{
-    //    Guid orderId = new("07c06c3f-0897-44b6-ae05-a70540e73a12");
-    //    Guid customerId = new("29a75938-ce2d-473b-b7fe-2903fe97fd6e");
-
-    //    customerHttpAccessorMock.Setup(x => x.CustomerId)
-    //                            .Returns(customerId);
-
-    //    orderRepositoryMock
-    //            .Setup(x => x.GetByIdAsync(orderId, customerId))
-    //            .ReturnsAsync((Domain.Order)null);
-
-    //    var completedOrderRequest = new CompletedOrderRequest(orderId);
-    //    var validationException = Assert.ThrowsAsync<NotFoundException>(async () =>
-    //    {
-    //        await mediator.Send(completedOrderRequest);
-    //    });
-
-    //    Assert.That(validationException.Message, Is.EqualTo($"Order not found for order - {orderId.ToString()}"));
-    //}
-
     [Test]
     public void Order_completed_customer_address_not_found_return_message()
     {

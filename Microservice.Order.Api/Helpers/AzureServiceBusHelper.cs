@@ -5,10 +5,6 @@ namespace Microservice.Order.Api.Helpers;
 
 public class AzureServiceBusHelper : IAzureServiceBusHelper
 {
-    private readonly ILogger<AzureServiceBusHelper> _logger;
-
-    public AzureServiceBusHelper(ILogger<AzureServiceBusHelper> logger) => _logger = logger;
-
     public async Task SendMessage(string queue, string data)
     {
         var client = new ServiceBusClient(EnvironmentVariables.AzureServiceBusConnection);

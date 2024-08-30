@@ -17,13 +17,6 @@ public class CompletedOrderCommandHandler(IOrderRepository orderRepository,
                                           ILogger<CompletedOrderCommandHandler> logger,
                                           IMapper mapper) : IRequestHandler<CompletedOrderRequest, CompletedOrderResponse>
 {
-    private ICustomerAddressService _customerAddressService { get; set; } = customerAddressService;
-    private IOrderRepository _orderRepository { get; set; } = orderRepository;
-    private IAzureServiceBusHelper _azureServiceBusHelper { get; set; } = azureServiceBusHelper;
-    private ICustomerHttpAccessor _customerHttpAccessor { get; set; } = customerHttpAccessor;
-    private IMapper _mapper { get; set; } = mapper;
-    private ILogger<CompletedOrderCommandHandler> _logger { get; set; } = logger;
-
     public async Task<CompletedOrderResponse> Handle(CompletedOrderRequest completedOrderRequest, CancellationToken cancellationToken)
     {
         var order = await UpdateOrderToCompleted(completedOrderRequest.OrderId);
@@ -34,26 +27,26 @@ public class CompletedOrderCommandHandler(IOrderRepository orderRepository,
 
     private async Task<Domain.Order> UpdateOrderToCompleted(Guid orderId)
     {
-        var order = await _orderRepository.GetByIdAsync(orderId, GetCustomerId());
+        var order = await orderRepository.GetByIdAsync(orderId, GetCustomerId());
         if (order == null)
         {
-            _logger.LogError("{message}", "Order not found for order - {orderId}");
+            logger.LogError("{message}", "Order not found for order - {orderId}");
             throw new NotFoundException("Order not found for order.");
         }
 
         order.OrderStatusId = Enums.OrderStatus.Completed;
 
-        await _orderRepository.UpdateAsync(order);
+        await orderRepository.UpdateAsync(order);
 
         return order;
     }
 
     private Guid GetCustomerId()
     {
-        var customerId = _customerHttpAccessor.CustomerId;
+        var customerId = customerHttpAccessor.CustomerId;
         if (Guid.Empty.Equals(customerId))
         {
-            _logger.LogError("{message}", "Customer not found - {customerId}");
+            logger.LogError("{message}", "Customer not found - {customerId}");
             throw new NotFoundException("Customer not found.");
         }
 
@@ -67,18 +60,18 @@ public class CompletedOrderCommandHandler(IOrderRepository orderRepository,
 
     private async Task SendOrderHistoryToServiceBusQueueAsync(Domain.Order order)
     {
-        var orderHistory = _mapper.Map<OrderHistory>(order);
+        var orderHistory = mapper.Map<OrderHistory>(order);
 
         await GetOrderAddress(orderHistory, order);
-        await _azureServiceBusHelper.SendMessage(EnvironmentVariables.AzureServiceBusQueueOrderCompleted, GetSerializedOrder(orderHistory));
+        await azureServiceBusHelper.SendMessage(EnvironmentVariables.AzureServiceBusQueueOrderCompleted, GetSerializedOrder(orderHistory));
     }
 
     private async Task GetOrderAddress(OrderHistory orderHistory, Domain.Order order)
     {
-        var customerAddress = await _customerAddressService.GetCustomerAddressAsync(order.CustomerAddressId);
+        var customerAddress = await customerAddressService.GetCustomerAddressAsync(order.CustomerAddressId);
         if (customerAddress == null)
         {
-            _logger.LogError("{message}", "Customer address not found for order id - {order.Id}");
+            logger.LogError("{message}", "Customer address not found for order id - {order.Id}");
             throw new NotFoundException("Customer address not found for order id.");
         }
 

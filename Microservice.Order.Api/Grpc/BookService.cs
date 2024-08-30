@@ -9,7 +9,6 @@ namespace Microservice.Order.Api.Grpc;
 
 public class BookService(IJwtHelper jwtHelper) : IBookService
 {
-    private IJwtHelper _jwtHelper { get; set; } = jwtHelper;
     public record BookDetailResponse(Guid Id, string Name, decimal UnitPrice);
     public record NotFoundBookDetailsResponse(Guid Id);
     public record BookDetailsResponse(List<BookDetailResponse> BookDetailResponse, List<NotFoundBookDetailsResponse> NotFoundBookDetailsResponse);
@@ -33,7 +32,7 @@ public class BookService(IJwtHelper jwtHelper) : IBookService
     {
         var headers = new Metadata
         {
-            { "Authorization", $"Bearer {_jwtHelper.GenerateJwtToken()}" }
+            { "Authorization", $"Bearer {jwtHelper.GenerateJwtToken()}" }
         };
 
         return headers;
@@ -65,37 +64,37 @@ public class BookService(IJwtHelper jwtHelper) : IBookService
         };
     }
 
-    private static BookDetailsResponse GetBookDetailsResponse(BooksResponse response)
-    {
-        return new BookDetailsResponse(GetBookDetailsFromResponse(response),
-                                            GetNotFoundBookDetailsFromResponse(response));
-    }
+    //private static BookDetailsResponse GetBookDetailsResponse(BooksResponse response)
+    //{
+    //    return new BookDetailsResponse(GetBookDetailsFromResponse(response),
+    //                                        GetNotFoundBookDetailsFromResponse(response));
+    //}
 
-    private static List<BookDetailResponse> GetBookDetailsFromResponse(BooksResponse booksResponse)
-    {
-        List<BookDetailResponse> bookDetailsResponse = [];
+    //private static List<BookDetailResponse> GetBookDetailsFromResponse(BooksResponse booksResponse)
+    //{
+    //    List<BookDetailResponse> bookDetailsResponse = [];
 
-        foreach (var bookResponse in booksResponse.BookResponses)
-        {
-            Guid id = new(bookResponse.Id);
-            string name = bookResponse.Name;
-            decimal unitPrice = decimal.Parse(bookResponse.UnitPrice);
+    //    foreach (var bookResponse in booksResponse.BookResponses)
+    //    {
+    //        Guid id = new(bookResponse.Id);
+    //        string name = bookResponse.Name;
+    //        decimal unitPrice = decimal.Parse(bookResponse.UnitPrice);
 
-            bookDetailsResponse.Add(new BookDetailResponse(id, name, unitPrice));
-        }
+    //        bookDetailsResponse.Add(new BookDetailResponse(id, name, unitPrice));
+    //    }
 
-        return bookDetailsResponse;
-    }
+    //    return bookDetailsResponse;
+    //}
 
-    private static List<NotFoundBookDetailsResponse> GetNotFoundBookDetailsFromResponse(BooksResponse booksResponse)
-    {
-        List<NotFoundBookDetailsResponse> notFoundBookDetailsResponse = [];
+    //private static List<NotFoundBookDetailsResponse> GetNotFoundBookDetailsFromResponse(BooksResponse booksResponse)
+    //{
+    //    List<NotFoundBookDetailsResponse> notFoundBookDetailsResponse = [];
 
-        foreach (var notFoundbookResponse in booksResponse.NotFoundBookResponses)
-        {
-            notFoundBookDetailsResponse.Add(new NotFoundBookDetailsResponse(new Guid(notFoundbookResponse.Id)));
-        }
+    //    foreach (var notFoundbookResponse in booksResponse.NotFoundBookResponses)
+    //    {
+    //        notFoundBookDetailsResponse.Add(new NotFoundBookDetailsResponse(new Guid(notFoundbookResponse.Id)));
+    //    }
 
-        return notFoundBookDetailsResponse;
-    }
+    //    return notFoundBookDetailsResponse;
+    //}
 }

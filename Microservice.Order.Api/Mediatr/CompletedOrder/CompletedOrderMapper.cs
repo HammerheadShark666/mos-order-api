@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
-using Microservice.Order.Api.Helpers;
+using Microservice.Order.Api.Helpers.Interfaces;
 using Microservice.Order.Api.Mediatr.CompletedOrder.Model;
 
 namespace Microservice.Order.Api.MediatR.CompletedOrder;
 
 public class CompletedOrderMapper : Profile
 {
-    public CompletedOrderMapper()
+    public CompletedOrderMapper(IOrderHelper orderHelper)
     {
         base.CreateMap<Domain.OrderItem, OrderItemHistory>()
             .ForMember(m => m.ProductId, o => o.MapFrom(s => s.ProductId))
@@ -20,7 +20,7 @@ public class CompletedOrderMapper : Profile
             .ForMember(m => m.CustomerId, o => o.MapFrom(s => s.CustomerId))
             .ForMember(m => m.AddressSurname, o => o.MapFrom(s => s.AddressSurname))
             .ForMember(m => m.AddressForename, o => o.MapFrom(s => s.AddressForename))
-            .ForMember(m => m.OrderNumber, o => o.MapFrom(s => OrderHelper.PaddedOrderNumber(s.OrderNumber)))
+            .ForMember(m => m.OrderNumber, o => o.MapFrom(s => orderHelper.PaddedOrderNumber(s.OrderNumber)))
             .ForMember(m => m.OrderItems, o => o.MapFrom(s => s.OrderItems))
             .ForMember(m => m.OrderStatus, o => o.MapFrom(s => s.OrderStatus.Status))
             .ForMember(m => m.Total, o => o.MapFrom(s => s.Total))
