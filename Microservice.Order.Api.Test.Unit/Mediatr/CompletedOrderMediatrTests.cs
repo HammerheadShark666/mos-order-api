@@ -40,6 +40,7 @@ public class CompletedOrderMediatrTests
         services.AddScoped<IAzureServiceBusHelper>(sp => azureServiceBusHelperMock.Object);
         services.AddScoped<ICustomerHttpAccessor>(sp => customerHttpAccessorMock.Object);
         services.AddScoped<ILogger<CompletedOrderCommandHandler>>(sp => loggerMock.Object);
+        services.AddScoped<IOrderHelper, OrderHelper>();
         services.AddAutoMapper(Assembly.GetAssembly(typeof(CompletedOrderMapper)));
 
         serviceProvider = services.BuildServiceProvider();
