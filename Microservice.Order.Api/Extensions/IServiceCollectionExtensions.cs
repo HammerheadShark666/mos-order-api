@@ -1,6 +1,7 @@
 ﻿// Ignore Spelling: Mediatr Api Grpc Jwt Versioning
 
 using Asp.Versioning;
+using Azure.Identity;
 using FluentValidation;
 using Grpc.Core;
 using Grpc.Net.Client.Configuration;
@@ -18,6 +19,7 @@ using Microservice.Order.Api.MediatR.AddOrder;
 using Microservice.Order.Api.Middleware;
 using Microservice.Order.Api.Protos;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -59,8 +61,7 @@ public static class IServiceCollectionExtensions
     public static void ConfigureDatabaseContext(this IServiceCollection services, ConfigurationManager configuration)
     {
         services.AddDbContextFactory<OrderDbContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString(Helpers.Constants.DatabaseConnectionString),
-            options => options.EnableRetryOnFailure()));
+            options.UseSqlServer(configuration.GetConnectionString(Helpers.Constants.DatabaseConnectionString)));
     }
 
     public static void ConfigureMediatr(this IServiceCollection services)
@@ -139,5 +140,24 @@ public static class IServiceCollectionExtensions
                     metadata.Add("Authorization", $"Bearer {token}");
                     return Task.CompletedTask;
                 });
+    }
+
+    public static void ConfigureServiceBusClient(this IServiceCollection services, bool isDevelopment)
+    {
+        if (isDevelopment)
+        {
+            services.AddAzureClients(builder =>
+            {
+                builder.AddServiceBusClient(EnvironmentVariables.GetEnvironmentVariable(Constants.AzureServiceBusConnection));
+            });
+        }
+        else
+        {
+            services.AddAzureClients(builder =>
+            {
+                builder.AddServiceBusClientWithNamespace(EnvironmentVariables.GetEnvironmentVariable(Constants.AzureServiceBusConnectionManagedIdentity));
+                builder.UseCredential(new ManagedIdentityCredential());
+            });
+        }
     }
 }

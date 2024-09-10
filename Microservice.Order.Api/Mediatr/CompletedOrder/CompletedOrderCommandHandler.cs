@@ -7,6 +7,7 @@ using Microservice.Order.Api.Helpers.Exceptions;
 using Microservice.Order.Api.Helpers.Interfaces;
 using Microservice.Order.Api.Mediatr.CompletedOrder.Model;
 using System.Text.Json;
+using System.Transactions;
 
 namespace Microservice.Order.Api.MediatR.CompletedOrder;
 
@@ -19,8 +20,17 @@ public class CompletedOrderCommandHandler(IOrderRepository orderRepository,
 {
     public async Task<CompletedOrderResponse> Handle(CompletedOrderRequest completedOrderRequest, CancellationToken cancellationToken)
     {
-        var order = await UpdateOrderToCompleted(completedOrderRequest.OrderId);
-        await SendOrderHistoryToServiceBusQueueAsync(order);
+        using (var ts = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+        {
+            var order = await UpdateOrderToCompleted(completedOrderRequest.OrderId);
+
+            using (var tx = new TransactionScope(TransactionScopeOption.Suppress, TransactionScopeAsyncFlowOption.Enabled))
+            {
+                await SendOrderHistoryToServiceBusQueueAsync(order);
+                tx.Complete();
+            }
+            ts.Complete();
+        }
 
         return new CompletedOrderResponse("Order completed.");
     }
