@@ -10,6 +10,7 @@ public class Constants
     public const string GRPC_CustomerAddress_Url = "GRPC_CUSTOMER_ADDRESS_URL";
 
     public const string AzureServiceBusConnection = "AZURE_SERVICE_BUS_CONNECTION";
+    public const string AzureServiceBusConnectionManagedIdentity = "ServiceBusConnection__fullyQualifiedNamespace";
     public const string AzureServiceBusQueueOrderCompleted = "AZURE_SERVICE_BUS_QUEUE_ORDER_COMPLETED";
 
     public const string DatabaseConnectionString = "SQLAZURECONNSTR_ORDER";

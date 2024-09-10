@@ -20,6 +20,7 @@ builder.Services.ConfigureJwt();
 builder.Services.ConfigureSwagger();
 builder.Services.ConfigureApiVersioning();
 builder.Services.ConfigureGrpc();
+builder.Services.ConfigureServiceBusClient(builder.Environment.IsDevelopment());
 
 var app = builder.Build();
 
