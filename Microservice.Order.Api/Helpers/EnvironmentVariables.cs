@@ -11,9 +11,12 @@ public class EnvironmentVariables
     public static string JwtSymmetricSecurityKey => GetEnvironmentVariable(Constants.JwtSymmetricSecurityKey);
     public static string GRPC_Book_Url => GetEnvironmentVariable(Constants.GRPC_Book_Url);
     public static string GRPC_CustomerAddress_Url => GetEnvironmentVariable(Constants.GRPC_CustomerAddress_Url);
-
     public static string AzureServiceBusConnection => GetEnvironmentVariable(Constants.AzureServiceBusConnection);
     public static string AzureServiceBusQueueOrderCompleted => GetEnvironmentVariable(Constants.AzureServiceBusQueueOrderCompleted);
+    public static string AzureUserAssignedManagedIdentityClientId => GetEnvironmentVariable(Constants.AzureUserAssignedManagedIdentityClientId);
+    public static string LocalDevelopmentClientId => GetEnvironmentVariable(Constants.AzureLocalDevelopmentClientId);
+    public static string LocalDevelopmentClientSecret => GetEnvironmentVariable(Constants.AzureLocalDevelopmentClientSecret);
+    public static string LocalDevelopmentTenantId => GetEnvironmentVariable(Constants.AzureLocalDevelopmentTenantId);
 
     public static string GetEnvironmentVariable(string name)
     {

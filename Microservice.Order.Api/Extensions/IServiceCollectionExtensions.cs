@@ -13,11 +13,14 @@ using Microservice.Order.Api.Grpc;
 using Microservice.Order.Api.Grpc.Interfaces;
 using Microservice.Order.Api.Helpers;
 using Microservice.Order.Api.Helpers.Automapper;
+using Microservice.Order.Api.Helpers.Exceptions;
 using Microservice.Order.Api.Helpers.Interfaces;
+using Microservice.Order.Api.Helpers.Providers;
 using Microservice.Order.Api.Helpers.Swagger;
 using Microservice.Order.Api.MediatR.AddOrder;
 using Microservice.Order.Api.Middleware;
 using Microservice.Order.Api.Protos;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -58,10 +61,22 @@ public static class IServiceCollectionExtensions
         services.AddAutoMapper(Assembly.GetAssembly(typeof(AutoMapperProfile)));
     }
 
-    public static void ConfigureDatabaseContext(this IServiceCollection services, ConfigurationManager configuration)
+    public static void ConfigureSqlServer(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
     {
-        services.AddDbContextFactory<OrderDbContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString(Helpers.Constants.DatabaseConnectionString)));
+        if (environment.IsProduction())
+        {
+            var connectionString = configuration.GetConnectionString(Constants.AzureDatabaseConnectionString)
+                    ?? throw new DatabaseConnectionStringNotFound("Production database connection string not found.");
+
+            AddDbContextFactory(services, SqlAuthenticationMethod.ActiveDirectoryManagedIdentity, new ProductionAzureSQLProvider(), connectionString);
+        }
+        else if (environment.IsDevelopment())
+        {
+            var connectionString = configuration.GetConnectionString(Constants.LocalDatabaseConnectionString)
+                    ?? throw new DatabaseConnectionStringNotFound("Development database connection string not found.");
+
+            AddDbContextFactory(services, SqlAuthenticationMethod.ActiveDirectoryServicePrincipal, new DevelopmentAzureSQLProvider(), connectionString);
+        }
     }
 
     public static void ConfigureMediatr(this IServiceCollection services)
@@ -159,5 +174,17 @@ public static class IServiceCollectionExtensions
                 builder.UseCredential(new ManagedIdentityCredential());
             });
         }
+    }
+
+    private static void AddDbContextFactory(IServiceCollection services, SqlAuthenticationMethod sqlAuthenticationMethod, SqlAuthenticationProvider sqlAuthenticationProvider, string connectionString)
+    {
+        services.AddDbContextFactory<OrderDbContext>(options =>
+        {
+            SqlAuthenticationProvider.SetProvider(
+                    sqlAuthenticationMethod,
+                    sqlAuthenticationProvider);
+            var sqlConnection = new SqlConnection(connectionString);
+            options.UseSqlServer(sqlConnection);
+        });
     }
 }
